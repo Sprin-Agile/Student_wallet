@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Wallet - Quản Lý Chi Tiêu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50">
+
+    <div id="toast-container" class="fixed top-5 right-5 z-50"></div>
+
+    <header class="bg-white border-b sticky top-0 z-40">
+        <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="bg-indigo-600 p-2 rounded-lg text-white">
+                    <i data-lucide="wallet"></i>
+                </div>
+                <span class="text-xl font-bold text-slate-800">Student<span class="text-indigo-600">Wallet</span></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div class="card p-6 border-l-4 border-indigo-500 fade-in">
+                <p class="text-sm text-slate-500 font-medium">Số dư</p>
+                <h3 id="total-balance" class="text-2xl font-bold text-slate-800">0đ</h3>
+            </div>
+            <div class="card p-6 border-l-4 border-emerald-500 fade-in delay-1">
+                <p class="text-sm text-slate-500 font-medium">Tổng thu</p>
+                <h3 id="total-income" class="text-2xl font-bold text-emerald-600">0đ</h3>
+            </div>
+            <div class="card p-6 border-l-4 border-rose-500 fade-in delay-2">
+                <p class="text-sm text-slate-500 font-medium">Tổng chi</p>
+                <h3 id="total-expense" class="text-2xl font-bold text-rose-600">0đ</h3>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div class="lg:col-span-5">
+                <div class="card p-6 sticky top-24 slide-in-left">
+                    <h2 class="text-lg font-bold mb-6 flex items-center gap-2">
+                        <i data-lucide="plus-circle" class="text-indigo-600"></i> Thêm giao dịch
+                    </h2>
+                    
+                    <form id="wallet-form" class="space-y-4">
+                        <div class="flex p-1 bg-slate-100 rounded-xl relative">
+                            <button type="button" id="btn-expense" class="type-btn active" onclick="changeType('expense') text-rose-600">Chi tiêu</button>
+                            <button type="button" id="btn-income" class="type-btn" onclick="changeType('income')">Thu nhập</button>
+                        </div>
+
+                        <div>
+                            <label class="label">Số tiền (VNĐ)</label>
+                            <input type="number" id="amount" class="input" placeholder="0">
+                            <small class="error" id="err-amount">Số tiền phải lớn hơn 0</small>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="label">Danh mục</label>
+                                <select id="category" class="input">
+                                    <option>Ăn uống</option>
+                                    <option>Đi lại</option>
+                                    <option>Mua sắm</option>
+                                    <option>Học tập</option>
+                                    <option>Giải trí</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="label">Ngày</label>
+                                <input type="date" id="date" class="input">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="label">Mô tả</label>
+                            <textarea id="desc" rows="2" class="input" placeholder="Ăn sáng, mua sách..."></textarea>
+                            <small class="error" id="err-desc">Vui lòng nhập mô tả</small>
+                        </div>
+
+                        <div class="flex gap-3 pt-2">
+                            <button type="button" onclick="resetForm()" class="btn-gray flex-1">Hủy</button>
+                            <button type="submit" class="btn-primary flex-[2]">Lưu lại</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="lg:col-span-7">
+                <div class="card p-6 slide-in-right min-h-[400px]">
+                    <h2 class="text-lg font-bold mb-6">Lịch sử gần đây</h2>
+                    <div id="history-list" class="space-y-3">
+                        </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

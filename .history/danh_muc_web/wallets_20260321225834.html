@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Ví - Student Wallet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <link rel="stylesheet" href="wallets.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="index.html" class="back-home"><i class='bx bx-chevron-left'></i> Quay về Tổng quan</a>
+            <h2 style="margin: 0; font-size: 20px;">Quản lý Ví tiền</h2>
+        </div>
+        <p class="section-title">Ví của bạn</p>
+        <div class="wallet-list" id="list-container"></div>
+        <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 30px 0;">
+        <div class="create-box">
+            <div id="step-1">
+                <h3 style="margin-top: 0;">Thêm ví mới ➕</h3>
+                <p style="color: #64748b; font-size: 14px;">Bước 1: Chọn loại tài khoản</p>
+                <div class="type-grid">
+                    <div class="type-option" onclick="goStep2('Tiền mặt', 'bx-money')">
+                        <i class='bx bx-money'></i><p>Tiền mặt</p>
+                    </div>
+                    <div class="type-option" onclick="goStep2('Thẻ tín dụng', 'bx-credit-card')">
+                        <i class='bx bx-credit-card'></i><p>Thẻ tín dụng</p>
+                    </div>
+                    <div class="type-option" onclick="goStep2('Đầu tư', 'bx-line-chart')">
+                        <i class='bx bx-line-chart'></i><p>Đầu tư</p>
+                    </div>
+                    <div class="type-option" onclick="goStep2('Nợ', 'bx-receipt')">
+                        <i class='bx bx-receipt'></i><p>Nợ</p>
+                    </div>
+                </div>
+            </div>
+            <div id="step-2" style="display: none;">
+                <h3 style="margin-top: 0;">Thông tin: <span id="type-name" style="color: var(--user-theme);"></span></h3>
+                <p style="color: #64748b; font-size: 14px;">Bước 2: Thiết lập chi tiết</p>
+                <div class="form-group">
+                    <label>Tên tài khoản</label>
+                    <input type="text" id="w-name" placeholder="VD: Ví MoMo, ATM VCB...">
+                </div>
+                <div class="form-group">
+                    <label>Số dư hiện tại (VNĐ)</label>
+                    <input type="number" id="w-balance" placeholder="0">
+                </div>
+                <div class="form-group">
+                    <label>Chọn biểu tượng</label>
+                    <div class="icon-picker">
+                        <div class="icon-box active" onclick="pickIcon(this, 'bx-wallet')"><i class='bx bx-wallet'></i></div>
+                        <div class="icon-box" onclick="pickIcon(this, 'bxs-bank')"><i class='bx bxs-bank'></i></div>
+                        <div class="icon-box" onclick="pickIcon(this, 'bx-credit-card')"><i class='bx bx-credit-card'></i></div>
+                        <div class="icon-box" onclick="pickIcon(this, 'bx-star')"><i class='bx bx-star'></i></div>
+                    </div>
+                </div>
+                <button class="btn-confirm" onclick="finish()">Hoàn tất tạo ví</button>
+                <p onclick="location.reload()" style="text-align: center; cursor: pointer; color: #94a3b8; font-size: 14px; margin-top: 15px;">Quay lại bước 1</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="wd-modal" id="walletDetailModal">
+        <div class="wd-modal-content">
+            <div class="wd-header">
+                <i class='bx bx-x' onclick="closeModal()"></i>
+                <span>Chi tiết ví</span>
+                <i class='bx bx-dots-vertical-rounded'></i>
+            </div>
+            
+            <div class="wd-top-card">
+                <div class="wd-type-label" id="modal-type">Tiền mặt</div>
+                <div class="wd-acc-info">
+                    <div class="wd-acc-left">
+                        <i id="modal-icon" class='bx bx-wallet'></i>
+                        <span id="modal-name">Tên ví</span>
+                    </div>
+                    <div class="wd-acc-right">
+                        <h3 id="modal-balance">0đ</h3>
+                        <span>VND</span>
+                    </div>
+                </div>
+                
+                <div class="wd-date-selector">
+                    <i class='bx bx-chevron-left'></i>
+                    <span id="modal-month">Tháng 3/2026</span>
+                    <i class='bx bx-chevron-right'></i>
+                </div>
+            </div>
+
+            <div class="wd-switch-container" id="wd-switch" data-active="analytic">
+                <div class="wd-switch-slider"></div>
+                <button class="wd-switch-btn active" id="btn-analytic" onclick="switchTab('analytic')">Phân tích</button>
+                <button class="wd-switch-btn" id="btn-detail" onclick="switchTab('detail')">Chi tiết</button>
+            </div>
+
+            <div id="tab-analytic" class="wd-tab-content active">
+                <div class="wd-chart-box">
+                    <canvas id="wdChart"></canvas>
+                </div>
+            </div>
+
+            <div id="tab-detail" class="wd-tab-content">
+                <div id="wd-tx-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="wallets.js"></script>
+</body>
+</html>

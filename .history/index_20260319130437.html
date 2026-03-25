@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Wallet - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- app container -->
+    <div class="app-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="logo">
+                <i class='bx bx-wallet-alt'></i>
+                <span>Student Wallet</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="active"><a href="#"><i class='bx bx-grid-alt'></i> Tổng quan</a></li>
+                <li><a href="#"><i class='bx bx-list-ul'></i> Giao dịch</a></li>
+                <li><a href="#"><i class='bx bx-pie-chart-alt-2'></i> Thống kê</a></li>
+                <li><a href="#"><i class='bx bx-target-lock'></i> Ngân sách</a></li>
+            </ul>
+            <div class="bottom-menu">
+                <a href="#"><i class='bx bx-cog'></i> Cài đặt</a>
+                <a href="#"><i class='bx bx-log-out'></i> Đăng xuất</a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-left">
+                    <button id="menu-toggle" class="mobile-only"><i class='bx bx-menu'></i></button>
+                    <div>
+                        <h2>Chào buổi sáng! 👋</h2>
+                        <p class="text-muted">Hôm nay là: <strong id="current-date" style="color: var(--primary);"></strong></p>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button id="theme-toggle" class="icon-btn"><i class='bx bx-moon'></i></button>
+                    <button class="icon-btn"><i class='bx bx-bell'></i></button>
+                    <div class="user-avatar">
+                        <img src="https://ui-avatars.com/api/?name=Student+Wallet&background=4facfe&color=fff" alt="Avatar">
+                    </div>
+                </div>
+            </header>
+
+            <section class="stat-cards">
+                <div class="card balance-card">
+                    <div class="card-info">
+                        <p>Tổng Số Dư</p>
+                        <h3 id="total-balance">0 đ</h3>
+                    </div>
+                    <div class="card-icon"><i class='bx bx-wallet'></i></div>
+                </div>
+                <div class="card income-card">
+                    <div class="card-info">
+                        <p>Tổng Thu</p>
+                        <h3 id="total-income" class="text-green">+ 0 đ</h3>
+                    </div>
+                    <div class="card-icon"><i class='bx bx-trending-up'></i></div>
+                </div>
+                <div class="card expense-card">
+                    <div class="card-info">
+                        <p>Tổng Chi</p>
+                        <h3 id="total-expense" class="text-red">- 0 đ</h3>
+                    </div>
+                    <div class="card-icon"><i class='bx bx-trending-down'></i></div>
+                </div>
+            </section>
+
+            <section class="dashboard-grid">
+                <div class="panel chart-panel">
+                    <div class="panel-header">
+                        <h3>Biến động thu chi</h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="mainChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="panel form-panel">
+                    <div class="panel-header">
+                        <h3>Thêm giao dịch mới</h3>
+                    </div>
+                    <form id="transaction-form">
+                        <div class="form-group type-toggle">
+                            <input type="radio" id="type-expense" name="trans-type" value="expense" checked>
+                            <label for="type-expense" class="btn-expense">Tiền chi</label>
+                            
+                            <input type="radio" id="type-income" name="trans-type" value="income">
+                            <label for="type-income" class="btn-income">Tiền thu</label>
+                        </div>
+                        <div class="form-group">
+                            <label>Số tiền (VNĐ)</label>
+                            <input type="number" id="amount" placeholder="VD: 50000" required min="1000">
+                        </div>
+                        <div class="form-group">
+                            <label>Danh mục</label>
+                            <select id="category">
+                                </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Ghi chú</label>
+                            <input type="text" id="note" placeholder="VD: Ăn trưa căn tin...">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Lưu giao dịch</button>
+                    </form>
+                </div>
+            </section>
+
+            <section class="panel recent-transactions">
+                <div class="panel-header">
+                    <h3>Giao dịch gần đây</h3>
+                    <a href="#" class="view-all">Xem tất cả</a>
+                </div>
+                <div class="table-responsive">
+                    <table id="trans-table">
+                        <thead>
+                            <tr>
+                                <th>Ngày</th>
+                                <th>Danh mục</th>
+                                <th>Ghi chú</th>
+                                <th class="text-right">Số tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transaction-list">
+                            </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

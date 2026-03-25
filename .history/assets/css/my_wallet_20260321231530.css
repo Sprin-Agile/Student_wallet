@@ -1,0 +1,81 @@
+:root { 
+    --user-theme: #7b61ff; 
+    --user-theme-light: rgba(123, 97, 255, 0.1); 
+}
+.wallets-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+
+.wallet-card-main { 
+    background: var(--bg-panel); 
+    padding: 20px; 
+    border-radius: 16px; 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08); /* Bóng đổ mềm mại */
+    transition: all 0.3s ease; 
+    cursor: pointer; 
+}
+.wallet-card-main:hover { 
+    transform: translateY(-3px); 
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12); /* Bóng to ra khi di chuột vào */
+}
+.wallet-card-main .icon-box { 
+    width: 55px; height: 55px; 
+    background: var(--user-theme-light); 
+    border-radius: 14px; 
+    display: flex; align-items: center; justify-content: center; 
+}
+.wallet-card-main .icon-box i { font-size: 28px; color: var(--primary); }
+
+.w-details { display: flex; flex-direction: column; align-items: flex-start; }
+
+.modal-wallet { 
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); 
+    z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(5px); 
+}
+.modal-wallet.active { display: flex; animation: fadeIn 0.3s ease; }
+.modal-wallet-content { 
+    background: var(--bg-panel); padding: 30px; border-radius: 24px; 
+    width: 90%; max-width: 400px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+}
+
+.type-select-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.type-box { 
+    background: transparent; border: 1.5px solid var(--border); 
+    padding: 20px; border-radius: 18px; cursor: pointer; 
+    text-align: center; transition: all 0.3s ease; 
+}
+.type-box:hover, .type-box.selected { 
+    border-color: var(--primary); 
+    background: var(--user-theme-light); 
+    transform: translateY(-5px); 
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); 
+}
+.type-box i { font-size: 30px; color: var(--primary); margin-bottom: 8px; display: block; }
+.type-box p { margin: 0; color: var(--text-main); font-size: 0.95rem; font-weight: 500; }
+
+.float-add-btn { 
+    position: fixed; bottom: 30px; right: 30px; 
+    width: 60px; height: 60px; background: var(--primary); color: white; 
+    border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+    font-size: 32px; box-shadow: 0 8px 20px var(--user-theme-light); 
+    cursor: pointer; z-index: 1000; transition: 0.3s; text-decoration: none;
+}
+.float-add-btn:hover { transform: scale(1.05); color: white; }
+
+/* Form nhập liệu trong Modal */
+.form-group-wallet label { 
+    display: block; margin-top: 15px; margin-bottom: 8px; 
+    font-size: 0.9rem; color: var(--text-muted); font-weight: 500;
+}
+.form-group-wallet input { 
+    width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border); 
+    background: transparent; color: var(--text-main); font-size: 0.95rem; 
+    outline: none; transition: 0.2s;
+}
+.form-group-wallet input:focus { border-color: var(--primary); }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

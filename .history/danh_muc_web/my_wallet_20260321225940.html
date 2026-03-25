@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ví tiền của tôi - Student Wallet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../assets/css/home.css"> 
+    <link rel="stylesheet" href="../assets/css/my_wallet.css">
+</head>
+<body>
+    <div id="sidebar-overlay" class="overlay"></div>
+    <div class="app-container">
+        
+        <aside class="sidebar" id="sidebar">
+            <div class="logo"><i class='bx bx-wallet-alt'></i><span>Student Wallet</span></div>
+            <ul class="nav-menu">
+                <li id="menu-overview"><a href="home.html"><i class='bx bx-grid-alt'></i> Tổng quan</a></li>
+                <li id="menu-wallets" class="active"><a href="my_wallet.html"><i class='bx bx-wallet'></i> Ví tiền của tôi</a></li>
+                <li><a href="#"><i class='bx bx-list-ul'></i> Giao dịch</a></li>
+                <li><a href="#"><i class='bx bx-pie-chart-alt-2'></i> Thống kê</a></li>
+                <li><a href="#"><i class='bx bx-target-lock'></i> Ngân sách</a></li>
+            </ul>
+            <div class="bottom-menu"><a href="#"><i class='bx bx-cog'></i> Cài đặt</a><a href="../index.html"><i class='bx bx-log-out'></i> Đăng xuất</a></div>
+        </aside>
+        
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-left">
+                    <button id="menu-toggle" class="mobile-only"><i class='bx bx-menu'></i></button>
+                    <div>
+                        <h2>Ví tiền của bạn 💳</h2>
+                        <p class="text-muted">Hôm nay là: <strong id="current-date" style="color: var(--primary);"></strong></p>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button id="theme-toggle" class="icon-btn"><i class='bx bx-moon'></i></button>
+                    
+                    <div class="notification-wrapper">
+                        <button id="notification-btn" class="icon-btn">
+                            <i class='bx bx-bell'></i>
+                            <span class="badge">2</span>
+                        </button>
+                        <div class="notification-dropdown" id="notification-dropdown">
+                            <div class="notif-header">
+                                <h4>Thông báo</h4>
+                                <span class="mark-read">Đánh dấu đã đọc</span>
+                            </div>
+                            <div class="notif-body">
+                                <div class="notif-item unread">
+                                    <div class="notif-icon primary"><i class='bx bx-target-lock'></i></div>
+                                    <div class="notif-content">
+                                        <p><strong>Mục tiêu tiết kiệm:</strong> Cố lên! Bạn đang tiến gần đến mục tiêu của mình rồi! 🎉</p>
+                                        <span class="notif-time">Vừa xong</span>
+                                    </div>
+                                </div>
+                                <div class="notif-item">
+                                    <div class="notif-icon warning"><i class='bx bx-pie-chart-alt-2'></i></div>
+                                    <div class="notif-content">
+                                        <p><strong>Nhắc nhở:</strong> Đừng quên ghi chép lại các khoản chi tiêu ngày hôm nay nhé!</p>
+                                        <span class="notif-time">2 giờ trước</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="notif-footer">
+                                <a href="#">Xem tất cả thông báo</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="user-avatar">
+                        <img src="https://ui-avatars.com/api/?name=Student+Wallet&background=4facfe&color=fff" alt="Avatar">
+                    </div>
+                </div>
+            </header>
+
+            <div class="page-content active">
+                <div class="panel-header" style="margin-bottom: 20px;">
+                    <h3>Thống kê tài sản</h3>
+                    <button class="btn btn-primary" id="btn-open-wallet-modal">+ Thêm ví mới</button>
+                </div>
+                
+                <section class="stat-cards" id="wallet-stats-area" style="margin-bottom: 30px;">
+                    <div class="card balance-card"><div class="card-info"><p>Tài sản ròng</p><h3 id="net-worth-val">0 đ</h3></div><div class="card-icon"><i class='bx bx-line-chart'></i></div></div>
+                    <div class="card income-card" style="background: transparent; border: 1px solid var(--border);"><div class="card-info"><p class="text-muted">Tổng Tài sản</p><h3 id="assets-val" class="text-green">0 đ</h3></div><div class="card-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;"><i class='bx bx-wallet'></i></div></div>
+                    <div class="card expense-card" style="background: transparent; border: 1px solid var(--border);"><div class="card-info"><p class="text-muted">Tổng Nợ</p><h3 id="debts-val" class="text-red">0 đ</h3></div><div class="card-icon"><i class='bx bx-receipt'></i></div></div>
+                </section>
+                
+                <h3 style="margin-bottom: 15px; font-size: 1.1rem;">Danh sách ví tiền</h3>
+                <div class="wallets-grid" id="wallets-list-container">
+                    </div>
+            </div>
+        </main>
+    </div>
+
+    <a href="../" id="float-add-transaction" class="float-add-btn"><i class='bx bx-plus'></i></a>
+
+    <div class="modal-wallet" id="wallet-modal-popup">
+        <div class="modal-wallet-content">
+            <div id="modal-step-1">
+                <h3 style="margin-bottom: 15px;">Loại ví mới</h3>
+                <div class="type-select-grid">
+                    <div class="type-box" data-wallet="Tiền mặt"><i class='bx bx-money'></i><p>Tiền mặt</p></div>
+                    <div class="type-box" data-wallet="Thẻ"><i class='bx bx-credit-card'></i><p>Thẻ</p></div>
+                    <div class="type-box" data-wallet="Đầu tư"><i class='bx bx-line-chart'></i><p>Đầu tư</p></div>
+                    <div class="type-box" data-wallet="Nợ"><i class='bx bx-receipt'></i><p>Nợ</p></div>
+                </div>
+            </div>
+            <div id="modal-step-2" style="display:none;">
+                <h3 id="modal-title-wallet" style="margin-bottom: 15px;">Cài đặt ví</h3>
+                <div class="form-group-wallet">
+                    <label>Tên ví</label>
+                    <input type="text" id="inp-w-name" placeholder="VD: Vietcombank, Momo...">
+                    <label>Số dư ban đầu</label>
+                    <input type="number" id="inp-w-balance" placeholder="0">
+                </div>
+                <button class="btn btn-primary w-100" style="margin-top:25px;" id="btn-save-new-wallet">Xác nhận tạo ví</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/my_wallet.js"></script>
+</body>
+</html>

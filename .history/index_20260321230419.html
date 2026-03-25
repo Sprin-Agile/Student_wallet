@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chào mừng - Student Wallet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/index.css">
+</head>
+<body>
+    <!-- -->
+    <div class="container">
+        <div id="step1" class="step active">
+            <i class='bx bx-wallet-alt main-logo'></i>
+            <h1>Student Wallet</h1>
+            <p>Ứng dụng quản lý chi tiêu thông minh dành cho sinh viên.</p>
+            <button class="btn" onclick="nextStep(2)">Bắt đầu</button>
+        </div>
+
+        <div id="step2" class="step">
+            <i class='bx bx-book-bookmark main-logo'></i>
+            <h2>Cài đặt sổ sách</h2>
+            <div class="form-group">
+                <label>Tên sổ (Ví dụ: Chi tiêu cá nhân)</label>
+                <input type="text" id="book-name" placeholder="Nhập tên sổ của bạn..." required>
+            </div>
+            <div class="form-group">
+                <label>Chọn biểu tượng của ví</label>
+                <div class="icon-grid">
+                    <label><input type="radio" name="wallet-icon" value="bx-football" checked><div class="icon-label"><i class='bx bx-football'></i></div></label>
+                    <label><input type="radio" name="wallet-icon" value="bx-book"><div class="icon-label"><i class='bx bx-book'></i></div></label>
+                    <label><input type="radio" name="wallet-icon" value="bx-child"><div class="icon-label"><i class='bx bx-child'></i></div></label>
+                    <label><input type="radio" name="wallet-icon" value="bxs-dog"><div class="icon-label"><i class='bx bxs-dog'></i></div></label>
+                    <label><input type="radio" name="wallet-icon" value="bx-restaurant"><div class="icon-label"><i class='bx bx-restaurant'></i></div></label>
+                    <label><input type="radio" name="wallet-icon" value="bx-closet"><div class="icon-label"><i class='bx bx-closet'></i></div></label>
+                    <label><input type="radio" name="wallet-icon" value="bx-plus-medical"><div class="icon-label"><i class='bx bx-plus-medical'></i></div></label>
+                    <label><input type="radio" name="wallet-icon" value="bx-car"><div class="icon-label"><i class='bx bx-car'></i></div></label>
+                </div>
+            </div>
+            <button class="btn" onclick="validateStep2()">Tiếp tục</button>
+            <button class="btn btn-outline" onclick="nextStep(1)">Quay lại</button>
+        </div>
+
+        <div id="step3" class="step">
+            <i class='bx bx-user-circle main-logo'></i>
+            <h2>Thông tin tài khoản</h2>
+            <div class="form-group">
+                <label>Tên tài khoản / Biệt danh</label>
+                <input type="text" id="account-name" placeholder="Nhập tên của bạn...">
+            </div>
+            <div class="form-group">
+                <label>Số dư hiện tại (VNĐ)</label>
+                <input type="number" id="account-balance" placeholder="Nhập số dư ban đầu..." min="0">
+            </div>
+            <div class="form-group">
+                <label>Chọn màu sắc yêu thích</label>
+                <input type="color" id="favorite-color" value="#0284c7">
+            </div>
+            <button class="btn" onclick="validateStep3()">Hoàn tất</button>
+            <button class="btn btn-outline" onclick="nextStep(2)">Quay lại</button>
+        </div>
+
+        <div id="step4" class="step">
+            <i class='bx bx-party main-logo' style="font-size: 80px;"></i>
+            <h2 style="font-size: 28px;">Xin chào!</h2>
+            <p id="welcome-message" style="font-size: 16px;">Quản lí tài chính của bạn dễ dàng với Student Wallet.</p>
+            <button class="btn" onclick="goToDashboard()">Vào ứng dụng ngay</button>
+        </div>
+    </div>
+
+    <script src="assets/js/index.js"></script>
+</body>
+</html>

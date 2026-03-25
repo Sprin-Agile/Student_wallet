@@ -1,0 +1,186 @@
+/* --- Variables & Theming --- */
+:root {
+    --primary: #4facfe;
+    --primary-dark: #7b61ff;
+    --bg-body: #f5f7fa;
+    --bg-panel: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #6b7280;
+    --border: #e5e7eb;
+    --accent-green: #10b981;
+    --accent-red: #ef4444;
+    --sidebar-width: 250px;
+    --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 5px 20px rgba(0, 0, 0, 0.08);
+    --radius: 16px;
+}
+
+[data-theme="dark"] {
+    --bg-body: #0f172a;
+    --bg-panel: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --border: #334155;
+    --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 5px 20px rgba(0, 0, 0, 0.4);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+body { background: var(--bg-body); color: var(--text-main); transition: 0.3s; overflow-x: hidden; }
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; }
+
+/* Typography & Utilities */
+.text-green { color: var(--accent-green) !important; }
+.text-red { color: var(--accent-red) !important; }
+.text-muted { color: var(--text-muted); font-size: 0.9rem; }
+.text-right { text-align: right; }
+.w-100 { width: 100%; }
+
+/* --- Layout --- */
+.app-container { display: flex; height: 100vh; overflow: hidden; }
+
+/* --- Sidebar --- */
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--bg-panel);
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    padding: 20px 0;
+    transition: 0.3s;
+    z-index: 100;
+}
+.logo { display: flex; align-items: center; gap: 10px; padding: 0 20px 30px; font-size: 1.2rem; font-weight: 700; color: var(--primary-dark); }
+.logo i { font-size: 1.8rem; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.nav-menu { flex: 1; }
+.nav-menu li a, .bottom-menu a {
+    display: flex; align-items: center; gap: 12px; padding: 12px 24px; color: var(--text-muted); font-weight: 500; transition: 0.2s;
+}
+.nav-menu li a i, .bottom-menu a i { font-size: 1.3rem; }
+.nav-menu li:hover a, .nav-menu li.active a { color: var(--primary-dark); background: rgba(123, 97, 255, 0.05); border-right: 3px solid var(--primary-dark); }
+.bottom-menu { border-top: 1px solid var(--border); padding-top: 10px; }
+
+/* --- Main Content --- */
+.main-content { flex: 1; padding: 20px 30px; overflow-y: auto; }
+
+/* Header */
+.top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+.header-left h2 { font-size: 1.5rem; }
+.header-right { display: flex; align-items: center; gap: 15px; }
+.icon-btn { background: var(--bg-panel); border: 1px solid var(--border); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--text-main); cursor: pointer; transition: 0.3s; }
+.icon-btn:hover { background: var(--border); }
+.user-avatar img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+.mobile-only { display: none; background: transparent; border: none; font-size: 1.5rem; color: var(--text-main); cursor: pointer; margin-right: 15px; }
+
+/* Cards */
+.stat-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
+.card { background: var(--bg-panel); padding: 20px; border-radius: var(--radius); display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow-sm); border: 1px solid var(--border); }
+.card-info p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 5px; }
+.card-info h3 { font-size: 1.5rem; }
+.balance-card h3 { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.card-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; }
+.balance-card .card-icon { background: rgba(123, 97, 255, 0.1); color: var(--primary-dark); }
+.income-card .card-icon { background: rgba(16, 185, 129, 0.1); color: var(--accent-green); }
+.expense-card .card-icon { background: rgba(239, 68, 68, 0.1); color: var(--accent-red); }
+
+/* Dashboard Grid */
+.dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 30px; }
+.panel { background: var(--bg-panel); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); }
+.panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.panel-header h3 { font-size: 1.1rem; font-weight: 600; }
+.filter-select { padding: 5px 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-body); color: var(--text-main); outline: none; }
+
+/* Chart Area */
+.chart-panel {
+    display: flex;
+    flex-direction: column;
+}
+.chart-container { 
+    position: relative; 
+    flex: 1; 
+    min-height: 350px; 
+    width: 100%; 
+}
+
+/* Form Area */
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-muted); }
+.form-group input[type="number"], .form-group input[type="text"], .form-group select {
+    width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg-body); color: var(--text-main); font-size: 0.95rem; outline: none; transition: 0.2s;
+}
+.form-group input:focus, .form-group select:focus { border-color: var(--primary); }
+
+.type-toggle { display: flex; gap: 10px; }
+.type-toggle input { display: none; }
+.type-toggle label {
+    flex: 1; text-align: center; padding: 10px; border-radius: 10px; border: 1px solid var(--border); cursor: pointer; transition: 0.2s; font-weight: 500; color: var(--text-muted);
+}
+.type-toggle input[value="expense"]:checked + label { background: rgba(239, 68, 68, 0.1); border-color: var(--accent-red); color: var(--accent-red); }
+.type-toggle input[value="income"]:checked + label { background: rgba(16, 185, 129, 0.1); border-color: var(--accent-green); color: var(--accent-green); }
+
+.btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+.btn-primary:hover { opacity: 0.9; transform: translateY(-2px); }
+
+/* Table */
+.view-all { color: var(--primary); font-size: 0.9rem; font-weight: 500; }
+.table-responsive { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 15px 10px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
+th { color: var(--text-muted); font-weight: 500; }
+tr:last-child td { border-bottom: none; }
+.cat-badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px; background: var(--bg-body); font-size: 0.85rem; border: 1px solid var(--border); }
+/**/
+overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 99; opacity: 0; visibility: hidden; transition: 0.3s;
+}
+.overlay.active { opacity: 1; visibility: visible; }
+
+/* --- 1. Màn hình Tablet (iPad) & Laptop nhỏ (Dưới 1024px) --- */
+@media (max-width: 1024px) {
+    /* Bật menu ẩn trượt ngang cho cả iPad */
+    .sidebar { position: fixed; left: -300px; height: 100%; z-index: 100; transition: left 0.3s ease-in-out; }
+    .sidebar.active { left: 0; box-shadow: var(--shadow-md); }
+    
+    /* Hiện nút Hamburger */
+    .mobile-only { display: block; margin-right: 15px; } 
+
+    /* Fix lỗi Header đè chữ: Xếp dọc xuống cho rộng rãi */
+    .top-header { flex-direction: column; align-items: flex-start; gap: 20px; }
+    .header-left { display: flex; align-items: flex-start; width: 100%; }
+    .header-right { width: 100%; justify-content: flex-start; margin-top: 0; } /* ĐÃ XÓA MARGIN ÂM */
+
+    /* Ép Main Content không được tràn */
+    .main-content { padding: 20px; width: 100%; max-width: 100vw; overflow-x: hidden; }
+
+    /* Fix Grid: Chuyển Form và Chart thành 1 cột dọc để iPad không bị ép nghẹt */
+    .dashboard-grid { grid-template-columns: 1fr; gap: 20px; width: 100%; margin-bottom: 20px; }
+    .panel { padding: 20px; width: 100%; box-sizing: border-box; overflow: hidden; }
+    
+    /* Ép kích thước Biểu đồ */
+    .chart-panel { display: block; }
+    .chart-container { min-height: 320px; width: 100% !important; max-width: 100%; position: relative; }
+}
+
+/* --- 2. Màn hình Điện thoại nhỏ (Mobile - Dưới 768px) --- */
+@media (max-width: 768px) {
+    /* Thẻ thống kê xếp dọc luôn */
+    .stat-cards { grid-template-columns: 1fr; gap: 15px; margin-bottom: 20px; }
+    
+    /* Bo góc và thu nhỏ padding cho vừa điện thoại */
+    .main-content { padding: 15px 10px; }
+    .card { padding: 15px; }
+    .card-info h3 { font-size: 1.25rem; }
+
+    .chart-container { height: 250px; min-height: 250px; }
+    
+    /* Thu nhỏ nút và chữ trong form */
+    .type-toggle label { padding: 8px 5px; font-size: 0.85rem; }
+    .form-group input, .form-group select { padding: 10px; font-size: 0.9rem; }
+    
+    /* Fix bảng lịch sử cuộn ngang mượt mà, không bị vỡ */
+    .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    th, td { white-space: nowrap; padding: 12px 10px; }
+}

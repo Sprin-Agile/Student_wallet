@@ -1,0 +1,138 @@
+:root { 
+    --user-theme: #7b61ff; 
+    --user-theme-light: rgba(123, 97, 255, 0.1); 
+}
+
+/* Lưới hiển thị ví */
+.wallets-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+
+/* THIẾT KẾ THẺ VÍ MÀU TÍM */
+.wallet-card-main { 
+    background: var(--bg-panel); 
+    padding: 20px; 
+    border-radius: 16px; 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+    
+    /* Đây là phần ĐỔ BÓNG (Shadow) bạn cần */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08); 
+    
+    transition: all 0.3s ease; 
+    cursor: pointer; 
+}
+
+/* Thêm hiệu ứng di chuột vào thẻ ví sẽ nảy lên nhẹ và bóng to ra */
+.wallet-card-main:hover { 
+    transform: translateY(-3px); 
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12); 
+}
+.wallet-card-main .icon-box { width: 55px; height: 55px; background: var(--user-theme-light); border-radius: 14px; display: flex; align-items: center; justify-content: center; }
+.wallet-card-main .icon-box i { font-size: 28px; color: var(--user-theme); }
+
+.w-details span { color: var(--text-muted); font-size: 0.85rem; }
+.w-details h4 { color: var(--text-main); margin: 2px 0; font-size: 1rem; font-weight: 600; }
+.w-details p { color: var(--user-theme); font-weight: 700; font-size: 1.1rem; margin-top: 2px; }
+
+/* MODAL TẠO VÍ */
+.modal-wallet { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+.modal-wallet.active { display: flex; animation: fadeIn 0.3s ease; }
+.modal-wallet-content { background: var(--bg-panel); padding: 30px; border-radius: 24px; width: 90%; max-width: 400px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+
+/* CÁC NÚT CHỌN LOẠI VÍ */
+.type-select-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.type-box { background: transparent; border: 1.5px solid var(--border); padding: 20px; border-radius: 18px; cursor: pointer; text-align: center; transition: all 0.2s; }
+.type-box:hover, .type-box.selected { border-color: var(--user-theme); background: var(--user-theme-light); transform: translateY(-2px); }
+.type-box i { font-size: 30px; color: var(--user-theme); margin-bottom: 8px; display: block; }
+.type-box p { margin: 0; color: var(--text-main); font-size: 0.95rem; font-weight: 500; }
+
+/* NÚT FLOAT DẤU + MÀU TÍM */
+.float-add-btn { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: var(--user-theme); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; box-shadow: 0 4px 15px rgba(123, 97, 255, 0.3); cursor: pointer; z-index: 1000; transition: 0.3s; text-decoration: none;}
+.float-add-btn:hover { transform: scale(1.05); color: white; }
+
+/* Form nhập liệu */
+.form-group-wallet label { display: block; margin-top: 15px; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-muted); font-weight: 500;}
+.form-group-wallet input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: transparent; color: var(--text-main); font-size: 0.95rem; outline: none; transition: 0.2s;}
+.form-group-wallet input:focus { border-color: var(--user-theme); }
+
+/* =========================================
+   GIAO DIỆN QUẢN LÝ VÍ & MODAL THÊM VÍ
+   ========================================= */
+
+/* 1. Thẻ hiển thị danh sách Ví (Giống Ảnh 2) */
+.wallet-card-main {
+    background: var(--bg-panel);
+    padding: 20px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.wallet-card-main:hover {
+    border-color: var(--user-theme);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px var(--user-theme-light);
+}
+.wallet-card-main i {
+    font-size: 32px;
+    color: var(--user-theme);
+    background: var(--user-theme-light);
+    padding: 15px;
+    border-radius: 16px;
+}
+.w-details { display: flex; flex-direction: column; align-items: flex-start; }
+.w-details span {
+    font-size: 10px;
+    background: rgba(123, 97, 255, 0.1);
+    color: var(--user-theme);
+    padding: 4px 8px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+.w-details h4 { margin: 0; font-size: 16px; font-weight: 600; color: var(--text-main); }
+.w-details p { margin: 2px 0 0; font-weight: 700; color: var(--user-theme); font-size: 18px; }
+
+/* 2. Khung Popup Modal (Thay thế cho trang mới) */
+.modal-wallet {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+    z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(5px);
+}
+.modal-wallet-content {
+    background: var(--bg-panel); padding: 30px; border-radius: 24px;
+    width: 90%; max-width: 450px; position: relative; border: 1px solid var(--border);
+    color: var(--text-main); box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* 3. Lưới chọn Loại Ví 2x2 (Giống Ảnh 3) */
+.type-select-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+}
+.type-box {
+    background: var(--bg-body);
+    border: 2px solid var(--border);
+    padding: 20px;
+    border-radius: 18px;
+    cursor: pointer;
+    transition: 0.3s;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+.type-box:hover, .type-box.active {
+    border-color: var(--user-theme);
+    background: var(--user-theme-light);
+    transform: translateY(-3px);
+}
+.type-box i { font-size: 40px; color: var(--user-theme); }
+.type-box p { margin: 0; font-weight: 600; color: var(--text-main); font-size: 15px;}

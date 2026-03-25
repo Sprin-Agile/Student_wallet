@@ -1,0 +1,63 @@
+/* Base Styles */
+.card {
+    @apply bg-white rounded-2xl shadow-sm border border-slate-100;
+}
+
+.label {
+    @apply block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5;
+}
+
+.input {
+    @apply w-full px-4 py-3 rounded-xl border border-slate-200 outline-none transition-all focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10;
+}
+
+.type-btn {
+    @apply flex-1 py-2 text-sm font-bold rounded-lg transition-all text-slate-400;
+}
+
+.type-btn.active {
+    @apply bg-white shadow text-indigo-600 scale-[1.02];
+}
+
+.btn-primary {
+    @apply bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-700 active:scale-95 transition-all shadow-lg shadow-indigo-100;
+}
+
+.btn-gray {
+    @apply bg-slate-100 text-slate-500 font-bold py-3 rounded-xl hover:bg-slate-200 transition-all;
+}
+
+.error {
+    @apply text-rose-500 text-[11px] mt-1 hidden font-medium;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.fade-in { animation: fadeIn 0.5s ease forwards; }
+.slide-in-left { animation: slideInLeft 0.5s ease forwards; }
+.slide-in-right { animation: slideInRight 0.5s ease forwards; }
+
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+
+.item-row {
+    @apply flex items-center justify-between p-4 rounded-xl border border-transparent hover:border-slate-100 hover:bg-slate-50 transition-all duration-300;
+}
+
+.toast-item {
+    @apply bg-slate-800 text-white px-6 py-3 rounded-xl shadow-xl mb-3 flex items-center gap-2 animate-bounce;
+}

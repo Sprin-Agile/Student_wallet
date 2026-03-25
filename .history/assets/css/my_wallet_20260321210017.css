@@ -1,0 +1,104 @@
+/* Lưới hiển thị ví */
+.wallets-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+    gap: 20px; 
+}
+
+/* THIẾT KẾ THẺ VÍ GIỐNG TRONG ẢNH */
+.wallet-card-main { 
+    background: var(--bg-panel); 
+    padding: 20px; 
+    border-radius: 12px; 
+    border: 1px solid var(--border); 
+    border-left: 6px solid #0284c7; /* Viền xanh bên trái */
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03); 
+    transition: 0.3s; 
+    cursor: pointer; 
+}
+
+.wallet-card-main:hover { 
+    transform: translateY(-2px); 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08); 
+}
+
+.wallet-card-main .icon-box { 
+    width: 55px;
+    height: 55px;
+    background: #e0f2fe; /* Nền xanh nhạt */
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wallet-card-main .icon-box i { 
+    font-size: 26px; 
+    color: #0284c7; /* Icon xanh đậm */
+}
+
+.w-details span { color: var(--text-muted); font-size: 0.85rem; }
+.w-details h4 { color: var(--text-main); margin: 2px 0; font-size: 1rem; font-weight: 600; }
+.w-details p { color: #0284c7; font-weight: 700; font-size: 1.1rem; margin-top: 2px; }
+
+/* MODAL TẠO VÍ */
+.modal-wallet { 
+    display: none; 
+    position: fixed; inset: 0; background: rgba(0,0,0,0.4); 
+    z-index: 10000; align-items: center; justify-content: center; 
+}
+.modal-wallet.active { display: flex; }
+
+.modal-wallet-content { 
+    background: var(--bg-panel); 
+    padding: 30px; border-radius: 16px; 
+    width: 90%; max-width: 420px; position: relative; 
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+/* CÁC NÚT CHỌN LOẠI VÍ GIỐNG TRONG ẢNH */
+.type-select-grid { 
+    display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; 
+}
+
+.type-box { 
+    background: transparent; 
+    border: 1px solid #e5e7eb; 
+    padding: 20px; border-radius: 12px; 
+    cursor: pointer; text-align: center; 
+    transition: all 0.2s; 
+}
+
+.type-box:hover, .type-box.selected { 
+    border-color: #0284c7; 
+    background: #f0f9ff; 
+}
+
+.type-box i { 
+    font-size: 26px; color: #0284c7; margin-bottom: 8px; display: block;
+}
+
+.type-box p { 
+    margin: 0; color: var(--text-main); font-size: 0.95rem; font-weight: 500;
+}
+
+/* NÚT FLOAT DẤU + MÀU XANH */
+.float-add-btn {
+    position: fixed; bottom: 30px; right: 30px;
+    width: 60px; height: 60px;
+    background: #0284c7; color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px;
+    box-shadow: 0 4px 15px rgba(2, 132, 199, 0.3);
+    cursor: pointer; z-index: 1000; transition: 0.3s;
+}
+.float-add-btn:hover { transform: scale(1.05); color: white;}
+
+/* Căn chỉnh form nhập tên ví */
+.form-group-wallet label { display: block; margin-top: 15px; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-muted); }
+.form-group-wallet input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--text-main); font-size: 0.95rem; outline: none; }
+.form-group-wallet input:focus { border-color: #0284c7; }

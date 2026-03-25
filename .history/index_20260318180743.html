@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Wallet - Quản lý chi tiêu sinh viên</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <nav id="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <i class='bx bx-wallet-alt'></i> Student Wallet
+            </a>
+            <ul class="nav-links">
+                <li><a href="#hero">Trang chủ</a></li>
+                <li><a href="#features">Tính năng</a></li>
+                <li><a href="#dashboard">Demo</a></li>
+                <li><a href="#pricing">Bảng giá</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button id="theme-toggle"><i class='bx bx-moon'></i></button>
+                <a href="#" class="btn btn-outline">Đăng nhập</a>
+                <a href="#" class="btn btn-primary">Đăng ký</a>
+            </div>
+        </div>
+    </nav>
+
+    <header id="hero" class="container">
+        <div class="hero-content reveal slide-up">
+            <h1 class="text-gradient">Quản lý chi tiêu sinh viên dễ dàng hơn bao giờ hết</h1>
+            <p>Theo dõi tài chính – Tiết kiệm thông minh – Làm chủ tương lai. Trải nghiệm giải pháp quản lý tài chính tối ưu nhất dành riêng cho bạn.</p>
+            <div class="hero-buttons">
+                <a href="#" class="btn btn-primary btn-large ripple">Bắt đầu miễn phí</a>
+                <a href="#dashboard" class="btn btn-outline btn-large">Xem demo</a>
+            </div>
+        </div>
+        <div class="hero-image reveal fade-in parallax">
+            <div class="glass-card mockup-card">
+                <div class="mockup-header">
+                    <span>Tổng số dư</span>
+                    <h3>4.500.000 đ</h3>
+                </div>
+                <div class="mockup-body">
+                    <div class="mockup-item"><i class='bx bx-up-arrow-circle text-green'></i> Thu nhập: +5.000.000đ</div>
+                    <div class="mockup-item"><i class='bx bx-down-arrow-circle text-red'></i> Chi tiêu: -500.000đ</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="features" class="container">
+        <div class="section-header reveal slide-up">
+            <h2>Tính năng nổi bật</h2>
+            <p>Mọi thứ bạn cần để kiểm soát ví tiền của mình</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card reveal slide-up" style="transition-delay: 0.1s;">
+                <div class="icon"><i class='bx bx-line-chart'></i></div>
+                <h3>Theo dõi chi tiêu</h3>
+                <p>Ghi chép và phân loại các khoản thu chi hằng ngày chỉ với vài thao tác.</p>
+            </div>
+            <div class="feature-card reveal slide-up" style="transition-delay: 0.2s;">
+                <div class="icon"><i class='bx bx-pie-chart-alt-2'></i></div>
+                <h3>Phân tích biểu đồ</h3>
+                <p>Báo cáo trực quan bằng biểu đồ giúp bạn dễ dàng nhìn nhận thói quen tiêu dùng.</p>
+            </div>
+            <div class="feature-card reveal slide-up" style="transition-delay: 0.3s;">
+                <div class="icon"><i class='bx bx-bell'></i></div>
+                <h3>Nhắc nhở thanh toán</h3>
+                <p>Không bao giờ trễ hạn tiền nhà, tiền điện hay các khoản vay nợ.</p>
+            </div>
+            <div class="feature-card reveal slide-up" style="transition-delay: 0.4s;">
+                <div class="icon"><i class='bx bx-target-lock'></i></div>
+                <h3>Quản lý ngân sách</h3>
+                <p>Đặt giới hạn chi tiêu cho từng danh mục để tránh tình trạng "cháy túi".</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="dashboard" class="container">
+        <div class="section-header reveal slide-up">
+            <h2>Trải nghiệm trực quan</h2>
+            <p>Giao diện Dashboard thiết kế độc quyền, dễ dàng thao tác</p>
+        </div>
+        <div class="dashboard-wrapper glass-panel reveal fade-in">
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <p>Tổng tiền</p>
+                    <h3 class="text-gradient">3.250.000 đ</h3>
+                </div>
+                <div class="stat-card">
+                    <p>Thu nhập (Tháng)</p>
+                    <h3 class="text-green">+ 5.000.000 đ</h3>
+                </div>
+                <div class="stat-card">
+                    <p>Đã chi (Tháng)</p>
+                    <h3 class="text-red">- 1.750.000 đ</h3>
+                </div>
+            </div>
+            <div class="dashboard-charts">
+                <div class="chart-container">
+                    <canvas id="expenseChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="why-us" class="container reveal slide-up">
+        <div class="why-us-content">
+            <h2>Tại sao chọn Student Wallet?</h2>
+            <ul class="why-list">
+                <li><i class='bx bx-check-circle'></i> <strong>Dễ sử dụng:</strong> Giao diện tối giản, không thao tác thừa.</li>
+                <li><i class='bx bx-check-circle'></i> <strong>Bảo mật cao:</strong> Dữ liệu mã hóa 256-bit an toàn tuyệt đối.</li>
+                <li><i class='bx bx-check-circle'></i> <strong>Dành cho sinh viên:</strong> Tính năng tối ưu cho nhu cầu học đường.</li>
+                <li><i class='bx bx-check-circle'></i> <strong>Đa nền tảng:</strong> Đồng bộ mượt mà trên Mobile & Web.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="pricing" class="container">
+        <div class="section-header reveal slide-up">
+            <h2>Bảng giá linh hoạt</h2>
+            <p>Chọn gói phù hợp với nhu cầu của bạn</p>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card reveal slide-up">
+                <h3>Free Plan</h3>
+                <div class="price">0đ <span>/tháng</span></div>
+                <ul>
+                    <li>Quản lý 2 ví</li>
+                    <li>Báo cáo cơ bản</li>
+                    <li>Hỗ trợ cộng đồng</li>
+                </ul>
+                <a href="#" class="btn btn-outline">Bắt đầu ngay</a>
+            </div>
+            <div class="pricing-card premium reveal slide-up" style="transition-delay: 0.2s;">
+                <div class="badge">Phổ biến nhất</div>
+                <h3>Premium Plan</h3>
+                <div class="price text-gradient">29.000đ <span>/tháng</span></div>
+                <ul>
+                    <li>Không giới hạn ví</li>
+                    <li>Báo cáo chi tiết & AI phân tích</li>
+                    <li>Đồng bộ Cloud</li>
+                    <li>Hỗ trợ 24/7</li>
+                </ul>
+                <a href="#" class="btn btn-primary">Nâng cấp ngay</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="cta" class="container reveal fade-in">
+        <div class="cta-box glass-panel text-center">
+            <h2>Bắt đầu quản lý tiền của bạn ngay hôm nay</h2>
+            <p>Chỉ mất 1 phút để thiết lập và kiểm soát tương lai tài chính của bạn.</p>
+            <a href="#" class="btn btn-primary btn-large">Đăng ký ngay <i class='bx bx-right-arrow-alt'></i></a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <a href="#" class="logo"><i class='bx bx-wallet-alt'></i> Student Wallet</a>
+                <p>Giải pháp tài chính thông minh cho sinh viên Việt Nam.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Sản phẩm</h4>
+                <a href="#">Tính năng</a>
+                <a href="#">Bảng giá</a>
+                <a href="#">Bảo mật</a>
+            </div>
+            <div class="footer-links">
+                <h4>Công ty</h4>
+                <a href="#">Về chúng tôi</a>
+                <a href="#">Liên hệ</a>
+                <a href="#">Blog</a>
+            </div>
+            <div class="footer-socials">
+                <a href="#"><i class='bx bxl-facebook'></i></a>
+                <a href="#"><i class='bx bxl-instagram'></i></a>
+                <a href="#"><i class='bx bxl-github'></i></a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Student Wallet. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
