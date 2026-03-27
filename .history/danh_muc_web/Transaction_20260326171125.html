@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <link rel="stylesheet" href="../assets/css/home.css">
+    <link rel="stylesheet" href="../assets/css/transaction.css">
+</head>
+<body>
+
+    <div id="sidebar-overlay" class="overlay"></div>
+    <div class="app-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="logo">
+                <i class='bx bx-wallet-alt'></i>
+                <span>Student Wallet</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="../home.html"><i class='bx bx-grid-alt'></i> Tổng quan</a></li>
+                <li id="menu-wallets">
+                    <a href="my_wallet.html"><i class='bx bx-wallet'></i> Ví tiền của tôi</a>
+                </li>
+                <li class="active"><a href="giaodich.html"><i class='bx bx-list-ul'></i> Giao dịch</a></li>
+                <li><a href="#"><i class='bx bx-pie-chart-alt-2'></i> Thống kê</a></li>
+                <li><a href="#"><i class='bx bx-target-lock'></i> Ngân sách</a></li>
+            </ul>
+            <div class="bottom-menu">
+                <a href="#"><i class='bx bx-cog'></i> Cài đặt</a>
+                <a href="../index.html"><i class='bx bx-log-out'></i> Đăng xuất</a>
+            </div>
+        </aside>
+        <main class="main-content">
+            <header class="header">
+                <div class="header-left">
+                    <h1>Lịch sử Giao dịch 📝</h1>
+                    <main class="main-content">
+                        <!-- header -->
+                        <header class="top-header">
+                            <div class="header-left">
+                                <button id="menu-toggle" class="mobile-only"><i class='bx bx-menu'></i></button>
+                                <div>
+                                    <p class="text-muted">Hôm nay là: <strong id="current-date" style="color: var(--primary);"></strong></p>
+                                </div>
+                            </div>
+                            <div class="header-right">
+                                <!-- mode dark/light -->
+                                <button id="theme-toggle" class="icon-btn"><i class='bx bx-moon'></i></button>
+
+                                <div class="notification-wrapper">
+                                    <button id="notification-btn" class="icon-btn">
+                                        <i class='bx bx-bell'></i>
+                                        <span class="badge">2</span>
+                                    </button>
+                                    <!-- thông báo -->
+                                    <div class="notification-dropdown" id="notification-dropdown">
+                                        <div class="notif-header">
+                                            <h4>Thông báo</h4>
+                                            <span class="mark-read">Đánh dấu đã đọc</span>
+                                        </div>
+                                        <div class="notif-body">
+                                            <div class="notif-item unread">
+                                                <div class="notif-icon primary"><i class='bx bx-target-lock'></i></div>
+                                                <div class="notif-content">
+                                                    <p><strong>Mục tiêu tiết kiệm:</strong> Cố lên! Bạn đang tiến gần đến mục tiêu của mình rồi! 🎉</p>
+                                                    <span class="notif-time">Vừa xong</span>
+                                                </div>
+                                            </div>
+                                            <div class="notif-item">
+                                                <div class="notif-icon warning"><i class='bx bx-pie-chart-alt-2'></i></div>
+                                                <div class="notif-content">
+                                                    <p><strong>Nhắc nhở:</strong> Đừng quên ghi chép lại các khoản chi tiêu ngày hôm nay nhé!</p>
+                                                    <span class="notif-time">2 giờ trước</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="notif-footer">
+                                            <a href="#">Xem tất cả thông báo</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="user-avatar">
+                                    <img src="https://ui-avatars.com/api/?name=Student+Wallet&background=4facfe&color=fff" alt="Avatar">
+                                </div>
+                            </div>
+                        </header>
+                        <!-- thông tin tổng quan -->
+                        <div class="sw-wrapper">
+                            <div class="sw-stats-grid">
+                                <div class="sw-stat-card sw-income-bg">
+                                    <div class="sw-stat-label">Tổng thu nhập</div>
+                                    <div class="sw-stat-value" id="total-income">0₫</div>
+                                </div>
+                                <div class="sw-stat-card sw-expense-bg">
+                                    <div class="sw-stat-label">Tổng chi tiêu</div>
+                                    <div class="sw-stat-value" id="total-expense">0₫</div>
+                                </div>
+                                <div class="sw-stat-card sw-add-btn" id="open-modal">
+                                    <div class="sw-add-inner">
+                                        <span class="sw-icon">+</span>
+                                        <span>Thêm giao dịch</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="sw-history-card">
+                                <div class="sw-history-title">Lịch sử giao dịch 📝</div>
+                                <div class="sw-table-wrapper">
+                                    <table class="sw-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Ngày</th>
+                                                <th>Danh mục</th>
+                                                <th class="sw-text-right">Số tiền</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="transaction-list"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sw-modal-overlay" id="modal-overlay">
+                            <div class="sw-modal-content">
+                                <button class="sw-modal-close" id="close-modal">&times;</button>
+                                <div class="sw-modal-header">Giao dịch mới</div>
+
+                                <form id="transaction-form">
+                                    <div class="sw-type-tab">
+                                        <input type="radio" name="trans-type" id="type-expense" value="expense" checked>
+                                        <label for="type-expense" class="sw-tab-item">Chi tiêu</label>
+
+                                        <input type="radio" name="trans-type" id="type-income" value="income">
+                                        <label for="type-income" class="sw-tab-item">Thu nhập</label>
+                                        <div class="sw-tab-indicator"></div>
+                                    </div>
+
+                                    <div class="sw-form-group">
+                                        <label>Số tiền (₫)</label>
+                                        <input type="number" id="amount" placeholder="Nhập số tiền..." required>
+                                    </div>
+
+                                    <div class="sw-form-group">
+                                        <label>Danh mục</label>
+                                        <select id="category"></select>
+                                    </div>
+
+                                    <div class="sw-form-group">
+                                        <label>Ghi chú</label>
+                                        <input type="text" id="note" placeholder="Bạn đã chi tiêu gì?">
+                                    </div>
+
+                                    <button type="submit" class="sw-btn-submit">Lưu lại</button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div id="sw-toast-container"></div>
+                        <script src="../assets/js/home.js"></script>
+                        <script src="../assets/js/transaction.js"></script>
+
+</body>
+</html>
