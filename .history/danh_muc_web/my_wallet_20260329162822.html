@@ -120,68 +120,6 @@
         </div>
     </div>
 
-    <div class="page-content active">
-        <div class="panel-header" style="margin-bottom: 20px;">
-            <h3>Thống kê tài sản</h3>
-            <button class="btn btn-primary" id="btn-open-wallet-modal">+ Thêm ví mới</button>
-        </div>
-        
-        <section class="stat-cards" id="wallet-stats-area" style="margin-bottom: 30px;">
-            <div class="card balance-card"><div class="card-info"><p>Tài sản ròng</p><h3 id="net-worth-val">0 đ</h3></div><div class="card-icon"><i class='bx bx-line-chart'></i></div></div>
-            <div class="card income-card" style="background: transparent; border: 1px solid var(--border);"><div class="card-info"><p class="text-muted">Tổng Tài sản</p><h3 id="assets-val" class="text-green">0 đ</h3></div><div class="card-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;"><i class='bx bx-wallet'></i></div></div>
-            <div class="card expense-card" style="background: transparent; border: 1px solid var(--border);"><div class="card-info"><p class="text-muted">Tổng Nợ</p><h3 id="debts-val" class="text-red">0 đ</h3></div><div class="card-icon"><i class='bx bx-receipt'></i></div></div>
-        </section>
-        
-        <h3 style="margin-bottom: 15px; font-size: 1.1rem;">Danh sách ví tiền</h3>
-        <div class="wallets-grid" id="wallets-list-container"></div>
-    </div>
-
-    <div class="wd-modal" id="walletDetailModal">
-        <div class="wd-modal-content">
-            <div class="wd-header">
-                <i class='bx bx-x' onclick="closeDetailModal()"></i>
-                <span>Chi tiết ví</span>
-                <i class='bx bx-dots-vertical-rounded'></i>
-            </div>
-            
-            <div class="wd-top-card">
-                <div class="wd-type-label" id="modal-type">Tiền mặt</div>
-                <div class="wd-acc-info">
-                    <div class="wd-acc-left">
-                        <i id="modal-icon" class='bx bx-wallet'></i>
-                        <span id="modal-name">Tên ví</span>
-                    </div>
-                    <div class="wd-acc-right">
-                        <h3 id="modal-balance">0đ</h3>
-                        <span>VND</span>
-                    </div>
-                </div>
-                <div class="wd-date-selector">
-                    <i class='bx bx-chevron-left'></i>
-                    <span id="modal-month">Tháng 3/2026</span>
-                    <i class='bx bx-chevron-right'></i>
-                </div>
-            </div>
-
-            <div class="wd-switch-container" id="wd-switch-detail" data-active="analytic">
-                <div class="wd-switch-slider"></div>
-                <button class="wd-switch-btn active" id="btn-analytic-det" onclick="switchDetailTab('analytic')">Phân tích</button>
-                <button class="wd-switch-btn" id="btn-detail-det" onclick="switchDetailTab('detail')">Chi tiết</button>
-            </div>
-
-            <div id="tab-analytic-det" class="wd-tab-content active">
-                <div class="wd-chart-box"><canvas id="wdChart"></canvas></div>
-            </div>
-
-            <div id="tab-detail-det" class="wd-tab-content">
-                <div id="wd-tx-list"></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-wallet" id="wallet-modal-popup">
-        </div>
-
     <script src="../assets/js/my_wallet.js"></script>
 </body>
 </html>
