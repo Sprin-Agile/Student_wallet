@@ -1,0 +1,98 @@
+/* Layout & Container */
+.statistics-section {
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+}
+
+.statistics-charts-column {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 900px;
+}
+
+/* Panel Header & Filters */
+.statistics-panel-header {
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.statistics-filter-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.statistics-select {
+    width: auto;
+    padding: 5px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg-body);
+    color: var(--text-main);
+    outline: none;
+}
+
+#custom-date-range {
+    display: none;
+    gap: 5px;
+    align-items: center;
+}
+
+.statistics-date-input {
+    padding: 5px 8px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+    background: var(--bg-body);
+    color: var(--text-main);
+    outline: none;
+}
+
+/* Stat Cards */
+.statistics-stat-cards {
+    grid-template-columns: 1fr 1fr;
+    margin-bottom: 20px;
+}
+
+.statistics-card-plain {
+    box-shadow: none;
+}
+
+/* Chart Container & Empty State */
+.statistics-chart-container {
+    height: 400px;
+    min-height: 400px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+#pie-empty-state {
+    display: none;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Saving Status Container */
+#saving-status-container {
+    display: none;
+    text-align: center;
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(16, 185, 129, 0.1);
+    border-radius: 12px;
+    border: 1px dashed var(--accent-green);
+}
+
+.statistics-saving-heading {
+    color: var(--accent-green);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 1.1rem;
+}
