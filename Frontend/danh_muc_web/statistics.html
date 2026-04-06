@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thống kê - Student Wallet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <link rel="stylesheet" href="../assets/css/home.css">
+    <link rel="stylesheet" href="../assets/css/statistics.css">
+</head>
+<body>
+    <div id="sidebar-overlay" class="overlay"></div>
+    <div class="app-container">
+        
+        <aside class="sidebar" id="sidebar">
+            <div class="logo">
+                <i class='bx bx-wallet-alt'></i>
+                <span>Student Wallet</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="home.html"><i class='bx bx-grid-alt'></i> Tổng quan</a></li>
+                <li id="menu-wallets"><a href="my_wallet.html"><i class='bx bx-wallet'></i> Ví tiền của tôi</a></li>
+                <li><a href="transaction.html"><i class='bx bx-list-ul'></i> Giao dịch</a></li>
+                <li class="active"><a href="statistics.html"><i class='bx bx-pie-chart-alt-2'></i> Thống kê</a></li>
+                <li><a href="#"><i class='bx bx-target-lock'></i> Ngân sách</a></li>
+            </ul>
+            <div class="bottom-menu">
+                <a href="#"><i class='bx bx-cog'></i> Cài đặt</a>
+                <a href="../index.html"><i class='bx bx-log-out'></i> Đăng xuất</a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            
+            <header class="top-header">
+                <div class="header-left">
+                    <button id="menu-toggle" class="mobile-only icon-btn"><i class='bx bx-menu'></i></button>
+                    <div>
+                        <h2 class="page-title">Thống kê chi tiêu 📊</h2>
+                        <p class="text-muted">Hôm nay là: <strong id="current-date" style="color: var(--primary);"></strong></p>
+                    </div>
+                </div>
+                
+                <div class="header-right">
+                    <button id="theme-toggle" class="icon-btn no-shrink"><i class='bx bx-moon'></i></button>
+                    
+                    <div class="notification-wrapper no-shrink">
+                        <button id="notification-btn" class="icon-btn">
+                            <i class='bx bx-bell'></i>
+                            <span class="badge">2</span>
+                        </button>
+                        <div class="notification-dropdown" id="notification-dropdown">
+                            <div class="notif-header">
+                                <h4>Thông báo</h4>
+                                <span class="mark-read">Đánh dấu đã đọc</span>
+                            </div>
+                            <div class="notif-body">
+                                <div class="notif-item unread">
+                                    <div class="notif-icon primary"><i class='bx bx-target-lock'></i></div>
+                                    <div class="notif-content">
+                                        <p><strong>Mục tiêu:</strong> Cố lên! Bạn đang tiến gần đến mục tiêu! 🎉</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="notif-footer"><a href="#">Xem tất cả</a></div>
+                        </div>
+                    </div>
+
+                    <div class="user-avatar no-shrink">
+                        <img src="https://ui-avatars.com/api/?name=Student+Wallet&background=4facfe&color=fff" alt="Avatar">
+                    </div>
+                </div>
+            </header>
+
+            <section class="statistics-section">
+                <div class="charts-column statistics-charts-column">
+                    <div class="panel chart-panel pie-chart-panel">
+                        <div class="panel-header statistics-panel-header">
+                            <h3>Thống Kê Chi Tiêu Cá Nhân</h3>
+                            <div class="statistics-filter-group">
+                                <select id="pie-time-filter" class="statistics-select">
+                                    <option value="week">Tuần này</option>
+                                    <option value="month" selected>Tháng này</option>
+                                    <option value="all">Tất cả</option>
+                                    <option value="custom">Tùy chọn</option>
+                                </select>
+                                <div id="custom-date-range">
+                                    <input type="date" id="pie-start-date" class="statistics-date-input">
+                                    <span>-</span>
+                                    <input type="date" id="pie-end-date" class="statistics-date-input">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stat-cards statistics-stat-cards">
+                            <div class="card income-card statistics-card-plain">
+                                <div class="card-info">
+                                    <p>Tổng Thu</p>
+                                    <h3 id="stat-income-val" class="text-green">+ 0 đ</h3>
+                                </div>
+                                <div class="card-icon"><i class='bx bx-trending-up'></i></div>
+                            </div>
+                            <div class="card expense-card statistics-card-plain">
+                                <div class="card-info">
+                                    <p>Tổng Chi</p>
+                                    <h3 id="stat-expense-val" class="text-red">- 0 đ</h3>
+                                </div>
+                                <div class="card-icon"><i class='bx bx-trending-down'></i></div>
+                            </div>
+                        </div>
+
+                        <div class="chart-container statistics-chart-container">
+                            <canvas id="expensePieChart"></canvas>
+                        </div>
+                        <p id="pie-empty-state" class="text-muted">Không có dữ liệu chi tiêu trong khoảng thời gian này.</p>
+                        
+                        <div id="saving-status-container">
+                            <h4 class="statistics-saving-heading">
+                                <i class='bx bxs-check-circle'></i> Tiết kiệm trong kỳ: <strong id="saving-val">+0 đ</strong>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../assets/js/statistics.js"></script>
+</body>
+</html>
