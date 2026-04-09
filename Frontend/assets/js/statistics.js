@@ -3,7 +3,7 @@ if (savedColor) {
     document.documentElement.style.setProperty('--primary', savedColor);
     document.documentElement.style.setProperty('--primary-dark', savedColor);
     document.documentElement.style.setProperty('--user-theme', savedColor);
-    document.documentElement.style.setProperty('--user-theme-light', savedColor + '1A'); 
+    document.documentElement.style.setProperty('--user-theme-light', savedColor + '1A');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const dateElement = document.getElementById('current-date');
     const todayDate = new Date();
     const options = { weekday: 'long', year: 'numeric', month: '2-digit', day: '2-digit' };
-    dateElement.textContent = todayDate.toLocaleDateString('vi-VN', options);
+    if (dateElement) dateElement.textContent = todayDate.toLocaleDateString('vi-VN', options);
 
     const menuToggle = document.getElementById('menu-toggle');
     const sidebar = document.getElementById('sidebar');
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (notifBtn && notifDropdown) {
         notifBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); 
+            e.stopPropagation();
             notifDropdown.classList.toggle('show');
         });
 
@@ -49,94 +49,110 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const themeToggle = document.getElementById('theme-toggle');
     const root = document.documentElement;
-    const icon = themeToggle.querySelector('i');
+    const icon = themeToggle ? themeToggle.querySelector('i') : null;
 
-    themeToggle.addEventListener('click', () => {
-        const isDark = root.getAttribute('data-theme') === 'dark';
-        if (isDark) {
-            root.removeAttribute('data-theme');
-            icon.classList.replace('bx-sun', 'bx-moon');
-        } else {
-            root.setAttribute('data-theme', 'dark');
-            icon.classList.replace('bx-moon', 'bx-sun');
-        }
-        updateChartTheme();
-    });
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            const isDark = root.getAttribute('data-theme') === 'dark';
+            if (isDark) {
+                root.removeAttribute('data-theme');
+                if (icon) icon.classList.replace('bx-sun', 'bx-moon');
+            } else {
+                root.setAttribute('data-theme', 'dark');
+                if (icon) icon.classList.replace('bx-moon', 'bx-sun');
+            }
+            updateChartTheme();
+        });
+    }
 
-    const savedData = localStorage.getItem('studentWalletData');
-    let transactions = savedData ? JSON.parse(savedData) : [];
+    let transactions = [];
 
     Chart.register(ChartDataLabels);
+    const pieCtxElement = document.getElementById('expensePieChart');
+    let expensePieChart = null;
 
-    const pieCtx = document.getElementById('expensePieChart').getContext('2d');
-    let expensePieChart = new Chart(pieCtx, {
-        type: 'pie',
-        data: {
-            labels: [],
-            datasets: [{
-                data: [],
-                backgroundColor: [
-                    '#ef4444', '#f97316', '#eab308', '#84cc16', '#22c55e', '#06b6d4', '#3b82f6', '#a855f7', '#ec4899', '#64748b'
-                ],
-                borderWidth: 2,
-                borderColor: 'var(--bg-panel)'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { 
-                    position: 'right', 
-                    labels: { 
-                        color: '#1f2937', 
-                        usePointStyle: true, 
-                        padding: 20, 
-                        font: { size: 15, weight: '600', family: "'Poppins', sans-serif" } 
-                    } 
-                },
-                datalabels: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            let label = context.label || '';
-                            if (label) label += ': ';
-                            if (context.parsed !== null) {
-                                label += new Intl.NumberFormat('vi-VN').format(context.parsed) + ' đ';
-                                let dataset = context.chart.data.datasets[context.datasetIndex];
-                                let total = dataset.data.reduce((acc, current) => acc + current, 0);
-                                let percentage = Math.round((context.parsed / total) * 100) + '%';
-                                label += ' (' + percentage + ')';
+    if (pieCtxElement) {
+        const pieCtx = pieCtxElement.getContext('2d');
+        expensePieChart = new Chart(pieCtx, {
+            type: 'pie',
+            data: {
+                labels: [],
+                datasets: [{
+                    data: [],
+                    backgroundColor: ['#ef4444', '#f97316', '#eab308', '#84cc16', '#22c55e', '#06b6d4', '#3b82f6', '#a855f7', '#ec4899', '#64748b'],
+                    borderWidth: 2,
+                    borderColor: 'var(--bg-panel)'
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'right', labels: { color: '#1f2937', usePointStyle: true, padding: 20, font: { size: 15, weight: '600', family: "'Poppins', sans-serif" } } },
+                    datalabels: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) label += ': ';
+                                if (context.parsed !== null) {
+                                    label += new Intl.NumberFormat('vi-VN').format(context.parsed) + ' đ';
+                                    let dataset = context.chart.data.datasets[context.datasetIndex];
+                                    let total = dataset.data.reduce((acc, current) => acc + current, 0);
+                                    let percentage = Math.round((context.parsed / total) * 100) + '%';
+                                    label += ' (' + percentage + ')';
+                                }
+                                return label;
                             }
-                            return label;
                         }
                     }
                 }
             }
+        });
+    }
+
+    // LẤY DỮ LIỆU TỪ MYSQL
+    async function loadDataForStats() {
+        const currentUser = localStorage.getItem('sw_currentUser');
+        if (!currentUser) return;
+
+        try {
+            const response = await fetch('http://127.0.0.1:5000/get_transactions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: currentUser })
+            });
+            if (response.ok) {
+                transactions = await response.json();
+                updatePieChart();
+            }
+        } catch (error) {
+            console.error("Lỗi:", error);
         }
-    });
+    }
 
     function parseVNdate(dateStr) {
+        if (!dateStr) return new Date();
         const parts = dateStr.split('/');
         if(parts.length === 3) return new Date(parts[2], parts[1] - 1, parts[0]);
-        return new Date(dateStr); 
+        return new Date(dateStr);
     }
 
     function updatePieChart() {
-        const filter = document.getElementById('pie-time-filter').value;
+        const filterEl = document.getElementById('pie-time-filter');
+        if (!filterEl || !expensePieChart) return;
+
+        const filter = filterEl.value;
         const customDateRange = document.getElementById('custom-date-range');
-        
-        if (filter === 'custom') {
-            customDateRange.style.display = 'flex';
-        } else {
-            customDateRange.style.display = 'none';
+
+        if (customDateRange) {
+            customDateRange.style.display = (filter === 'custom') ? 'flex' : 'none';
         }
 
         const now = new Date();
         const currentWeekStart = new Date(now);
         currentWeekStart.setDate(now.getDate() - now.getDay() + (now.getDay() === 0 ? -6 : 1));
         currentWeekStart.setHours(0,0,0,0);
-        
+
         const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
 
         const expenseData = {};
@@ -146,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
         transactions.forEach(t => {
             const tDate = parseVNdate(t.date);
             let include = false;
-            
+
             if (filter === 'all') {
                 include = true;
             } else if (filter === 'month') {
@@ -154,11 +170,11 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (filter === 'week') {
                 if (tDate >= currentWeekStart) include = true;
             } else if (filter === 'custom') {
-                const startRaw = document.getElementById('pie-start-date').value;
-                const endRaw = document.getElementById('pie-end-date').value;
+                const startRaw = document.getElementById('pie-start-date') ? document.getElementById('pie-start-date').value : null;
+                const endRaw = document.getElementById('pie-end-date') ? document.getElementById('pie-end-date').value : null;
                 let passStart = true;
                 let passEnd = true;
-                
+
                 if (startRaw) {
                     const startD = new Date(startRaw);
                     startD.setHours(0,0,0,0);
@@ -190,48 +206,52 @@ document.addEventListener('DOMContentLoaded', () => {
         const pieCanvasContainer = document.getElementById('expensePieChart').parentElement;
 
         if (totalExpenseFiltered === 0) {
-            pieEmptyState.style.display = 'block';
-            pieCanvasContainer.style.display = 'none';
+            if (pieEmptyState) pieEmptyState.style.display = 'block';
+            if (pieCanvasContainer) pieCanvasContainer.style.display = 'none';
         } else {
-            pieEmptyState.style.display = 'none';
-            pieCanvasContainer.style.display = 'flex';
+            if (pieEmptyState) pieEmptyState.style.display = 'none';
+            if (pieCanvasContainer) pieCanvasContainer.style.display = 'flex';
         }
 
         expensePieChart.data.labels = labels;
         expensePieChart.data.datasets[0].data = data;
-        
+
         const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
         const legendColor = isDark ? '#f8fafc' : '#1e293b';
         const borderColor = isDark ? '#1e293b' : '#ffffff';
-        
+
         expensePieChart.options.plugins.legend.labels.color = legendColor;
         expensePieChart.data.datasets[0].borderColor = borderColor;
 
         const incomeFmt = new Intl.NumberFormat('vi-VN').format(totalIncomeFiltered);
         const expenseFmt = new Intl.NumberFormat('vi-VN').format(totalExpenseFiltered);
 
-        document.getElementById('stat-income-val').textContent = '+' + incomeFmt + ' đ';
-        document.getElementById('stat-expense-val').textContent = '-' + expenseFmt + ' đ';
+        if (document.getElementById('stat-income-val')) document.getElementById('stat-income-val').textContent = '+' + incomeFmt + ' đ';
+        if (document.getElementById('stat-expense-val')) document.getElementById('stat-expense-val').textContent = '-' + expenseFmt + ' đ';
 
         const savingContainer = document.getElementById('saving-status-container');
         const savingVal = document.getElementById('saving-val');
-        
-        if (totalIncomeFiltered > totalExpenseFiltered) {
-            const savedAmount = totalIncomeFiltered - totalExpenseFiltered;
-            savingVal.textContent = '+' + new Intl.NumberFormat('vi-VN').format(savedAmount) + ' đ';
-            savingContainer.style.display = 'block';
-        } else {
-            savingContainer.style.display = 'none';
+
+        if (savingContainer && savingVal) {
+            if (totalIncomeFiltered > totalExpenseFiltered) {
+                const savedAmount = totalIncomeFiltered - totalExpenseFiltered;
+                savingVal.textContent = '+' + new Intl.NumberFormat('vi-VN').format(savedAmount) + ' đ';
+                savingContainer.style.display = 'block';
+            } else {
+                savingContainer.style.display = 'none';
+            }
         }
 
         expensePieChart.update();
     }
 
-    document.getElementById('pie-time-filter').addEventListener('change', updatePieChart);
-    document.getElementById('pie-start-date').addEventListener('change', updatePieChart);
-    document.getElementById('pie-end-date').addEventListener('change', updatePieChart);
+    const filterEl = document.getElementById('pie-time-filter');
+    const startEl = document.getElementById('pie-start-date');
+    const endEl = document.getElementById('pie-end-date');
 
-    updatePieChart();
+    if (filterEl) filterEl.addEventListener('change', updatePieChart);
+    if (startEl) startEl.addEventListener('change', updatePieChart);
+    if (endEl) endEl.addEventListener('change', updatePieChart);
 
     function updateChartTheme() {
         if (expensePieChart) {
@@ -242,4 +262,6 @@ document.addEventListener('DOMContentLoaded', () => {
             expensePieChart.update();
         }
     }
+
+    loadDataForStats();
 });

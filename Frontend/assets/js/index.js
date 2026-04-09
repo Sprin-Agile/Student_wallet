@@ -1,6 +1,4 @@
-
 function nextStep(stepNumber) {
-
     document.querySelectorAll('.step').forEach(step => {
         step.classList.remove('active');
     });
@@ -20,13 +18,11 @@ function toggleAuth(mode) {
     }
 }
 
-
 async function handleAuth(action) {
     const username = (action === 'login') ? document.getElementById('login-username').value : document.getElementById('reg-username').value;
     const password = (action === 'login') ? document.getElementById('login-password').value : document.getElementById('reg-password').value;
     const errorEl = document.getElementById(action === 'login' ? 'login-error' : 'reg-error');
 
-    // 2. Gọi đến máy chủ Python (Backend)
     try {
         const url = `http://127.0.0.1:5000/${action}`;
         const response = await fetch(url, {
@@ -39,6 +35,17 @@ async function handleAuth(action) {
 
         if (response.ok) {
             alert(data.message || "Thành công!");
+            const newUser = data.user || username;
+            const oldUser = localStorage.getItem('sw_currentUser');
+            if (oldUser !== newUser) {
+                localStorage.removeItem('studentWalletList');
+                localStorage.removeItem('sw_MyWallets');
+                localStorage.removeItem('studentWalletData');
+                localStorage.removeItem('studentWalletGoal');
+                localStorage.removeItem('sw_Balance');
+                localStorage.removeItem('sw_BookName');
+            }
+            localStorage.setItem('sw_currentUser', newUser);
             if (action === 'register') {
                 nextStep(3);
             } else {
@@ -53,27 +60,39 @@ async function handleAuth(action) {
     }
 }
 
-// Xử lý lưu thông tin Cài đặt sổ sách (Bước 3 -> Bước 4)
-function finishSetup() {
+async function finishSetup() {
     const bookName = document.getElementById('book-name').value || 'Ví cá nhân';
-    const balance = document.getElementById('account-balance').value || 0;
+    const balance = parseInt(document.getElementById('account-balance').value) || 0;
     const color = document.getElementById('favorite-color').value;
     const icon = document.querySelector('input[name="wallet-icon"]:checked').value;
 
-    // Lưu các dữ liệu thiết lập vào LocalStorage
     localStorage.setItem('sw_BookName', bookName);
     localStorage.setItem('sw_Balance', balance);
     localStorage.setItem('sw_Color', color);
     localStorage.setItem('sw_Icon', icon);
-
-    // Đánh dấu đây là tài khoản mới (để bên home.js biết đường tạo giao dịch số dư ban đầu)
     localStorage.setItem('sw_NewAccount', 'true');
+    const currentUser = localStorage.getItem('sw_currentUser');
+    if (balance > 0 && currentUser) {
+        try {
+            await fetch('http://127.0.0.1:5000/add_transaction', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: currentUser,
+                    amount: balance,
+                    category: 'Khác 📦',
+                    note: 'Số dư ban đầu',
+                    type: 'income' // Phân loại là tiền thu (cộng vào ví)
+                })
+            });
+        } catch (error) {
+            console.error("Lỗi khi lưu số dư ban đầu:", error);
+        }
+    }
 
-    // Chuyển sang màn hình Chào mừng (Bước 4)
     nextStep(4);
 }
 
-// Nút chuyển từ Bước 4 vào Home
 function goToDashboard() {
     window.location.href = 'danh_muc_web/home.html';
 }

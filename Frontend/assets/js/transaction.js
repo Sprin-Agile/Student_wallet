@@ -3,8 +3,9 @@ if (savedColor) {
     document.documentElement.style.setProperty('--primary', savedColor);
     document.documentElement.style.setProperty('--primary-dark', savedColor);
     document.documentElement.style.setProperty('--user-theme', savedColor);
-    document.documentElement.style.setProperty('--user-theme-light', savedColor + '1A'); 
+    document.documentElement.style.setProperty('--user-theme-light', savedColor + '1A');
 }
+
 document.addEventListener('DOMContentLoaded', () => {
 
     const dateElement = document.getElementById('current-date');
@@ -13,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
         dateElement.textContent = new Date().toLocaleDateString('vi-VN', options);
     }
 
-    
     const menuToggle = document.getElementById('menu-toggle');
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebar-overlay');
@@ -29,13 +29,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    
     const notifBtn = document.getElementById('notification-btn');
     const notifDropdown = document.getElementById('notification-dropdown');
 
     if (notifBtn && notifDropdown) {
         notifBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); 
+            e.stopPropagation();
             notifDropdown.classList.toggle('show');
         });
         document.addEventListener('click', (e) => {
@@ -45,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    
     const themeToggle = document.getElementById('theme-toggle');
     const root = document.documentElement;
 
@@ -70,12 +68,30 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    
     const modal = document.getElementById('modal-overlay');
     const form = document.getElementById('transaction-form');
     const categorySelect = document.getElementById('category');
-    
-    let transactions = JSON.parse(localStorage.getItem('studentWalletData')) || [];
+
+    let transactions = [];
+
+    async function loadTransactions() {
+        const currentUser = localStorage.getItem('sw_currentUser');
+        if (!currentUser) return;
+
+        try {
+            const response = await fetch('http://127.0.0.1:5000/get_transactions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: currentUser })
+            });
+            if (response.ok) {
+                transactions = await response.json();
+                render();
+            }
+        } catch (error) {
+            console.error("Lỗi lấy dữ liệu:", error);
+        }
+    }
 
     const categories = {
         expense: ['Ăn uống 🍜', 'Tiền trọ 🏠', 'Học phí/Sách vở 📚', 'Di chuyển 🛵', 'Giải trí 🎮', 'Khác 📦'],
@@ -92,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let inc = 0, exp = 0;
         const list = document.getElementById('transaction-list');
         const emptyState = document.getElementById('empty-state');
-        
+
         if (!list) return;
         list.innerHTML = '';
 
@@ -110,8 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const isIncome = t.type === 'income';
             const tr = document.createElement('tr');
-            
-            
+
             tr.innerHTML = `
                 <td>${t.date}</td>
                 <td><span class="cat-badge">${t.category}</span></td>
@@ -128,35 +143,42 @@ document.addEventListener('DOMContentLoaded', () => {
             list.appendChild(tr);
         });
 
-        
         const balance = inc - exp;
-        
+
         if (document.getElementById('total-income')) document.getElementById('total-income').innerText = '+' + new Intl.NumberFormat('vi-VN').format(inc) + ' ₫';
         if (document.getElementById('total-expense')) document.getElementById('total-expense').innerText = '-' + new Intl.NumberFormat('vi-VN').format(exp) + ' ₫';
-        
+
         const balanceEl = document.getElementById('total-balance');
         if (balanceEl) {
             balanceEl.innerText = new Intl.NumberFormat('vi-VN').format(balance) + ' ₫';
         }
 
-        
         document.querySelectorAll('.btn-delete').forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', async function() {
                 const id = parseInt(this.getAttribute('data-id'));
+                const currentUser = localStorage.getItem('sw_currentUser');
+
                 if(confirm('Bạn có chắc chắn muốn xóa giao dịch này?')) {
-                    transactions = transactions.filter(tx => tx.id !== id);
-                    localStorage.setItem('studentWalletData', JSON.stringify(transactions));
-                    render();
+                    try {
+                        const response = await fetch('http://127.0.0.1:5000/delete_transaction', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ id: id, username: currentUser })
+                        });
+
+                        if (response.ok) {
+                            loadTransactions();
+                        }
+                    } catch (error) {
+                        alert("Lỗi khi xóa!");
+                    }
                 }
             });
         });
     }
 
-  
     updateDropdown('expense');
-    render();
 
-    
     const openModalBtn = document.getElementById('open-modal');
     const closeModalBtn = document.getElementById('close-modal');
     if (openModalBtn) openModalBtn.onclick = () => modal.classList.add('active');
@@ -165,35 +187,44 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('input[name="trans-type"]').forEach(radio => {
         radio.addEventListener('change', (e) => updateDropdown(e.target.value));
     });
-
     if (form) {
-        form.onsubmit = (e) => {
+        form.onsubmit = async (e) => {
             e.preventDefault();
-            
+
+            const currentUser = localStorage.getItem('sw_currentUser');
             const type = document.querySelector('input[name="trans-type"]:checked').value;
             const amount = parseInt(document.getElementById('amount').value);
-            
+
             if (!amount || amount <= 0) {
                 alert("Vui lòng nhập số tiền hợp lệ!");
                 return;
             }
-            
+
             const newEntry = {
-                id: Date.now(),
-                date: new Date().toLocaleDateString('vi-VN'),
+                username: currentUser,
                 category: categorySelect.value,
-                note: document.getElementById('note').value,
+                note: document.getElementById('note').value || 'Không có ghi chú',
                 amount: amount,
                 type: type
             };
 
-            transactions.push(newEntry);
-            localStorage.setItem('studentWalletData', JSON.stringify(transactions));
-            
-            render();
-            if (modal) modal.classList.remove('active');
-            form.reset();
-            updateDropdown('expense'); 
+            try {
+                const response = await fetch('http://127.0.0.1:5000/add_transaction', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newEntry)
+                });
+
+                if (response.ok) {
+                    if (modal) modal.classList.remove('active');
+                    form.reset();
+                    updateDropdown('expense');
+                    loadTransactions();
+                }
+            } catch (error) {
+                alert("Lỗi kết nối server!");
+            }
         };
     }
+    loadTransactions();
 });
