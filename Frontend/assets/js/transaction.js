@@ -1,37 +1,91 @@
-const savedColor = localStorage.getItem('sw_Color');
-if (savedColor) {
-    document.documentElement.style.setProperty('--primary', savedColor);
-    document.documentElement.style.setProperty('--primary-dark', savedColor);
-    document.documentElement.style.setProperty('--user-theme', savedColor);
-    document.documentElement.style.setProperty('--user-theme-light', savedColor + '1A');
-}
+
+const savedColor = localStorage.getItem('sw_Color') || '#4facfe';
+document.documentElement.style.setProperty('--primary', savedColor);
+document.documentElement.style.setProperty('--primary-dark', savedColor);
+document.documentElement.style.setProperty('--user-theme', savedColor);
+document.documentElement.style.setProperty('--user-theme-light', savedColor + '1A');
 
 document.addEventListener('DOMContentLoaded', () => {
+    const root = document.documentElement;
+    let currentTheme = localStorage.getItem('sw_Theme') || 'light';
+    const currentUser = localStorage.getItem('sw_currentUser');
+
+    function applyGlobalTheme() {
+        if (currentTheme === 'dark') {
+            root.setAttribute('data-theme', 'dark');
+        } else {
+            root.removeAttribute('data-theme');
+        }
+
+        const logo = document.querySelector('.logo');
+        if (logo) {
+            logo.style.setProperty('color', savedColor, 'important');
+            logo.querySelectorAll('span, i').forEach(el => el.style.setProperty('color', savedColor, 'important'));
+        }
+    }
+    applyGlobalTheme();
 
     const dateElement = document.getElementById('current-date');
-    if (dateElement) {
-        const options = { weekday: 'long', year: 'numeric', month: '2-digit', day: '2-digit' };
-        dateElement.textContent = new Date().toLocaleDateString('vi-VN', options);
-    }
+    if (dateElement) dateElement.textContent = new Date().toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: '2-digit', day: '2-digit' });
 
     const menuToggle = document.getElementById('menu-toggle');
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebar-overlay');
-
     if (menuToggle && sidebar && overlay) {
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
+        menuToggle.addEventListener('click', () => { sidebar.classList.toggle('active'); overlay.classList.toggle('active'); });
+        overlay.addEventListener('click', () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); });
+    }
+
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle) {
+        const icon = themeToggle.querySelector('i');
+        themeToggle.addEventListener('click', () => {
+            currentTheme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            root.setAttribute('data-theme', currentTheme === 'dark' ? 'dark' : '');
+            localStorage.setItem('sw_Theme', currentTheme);
+            if (icon) icon.classList.replace(currentTheme === 'dark' ? 'bx-moon' : 'bx-sun', currentTheme === 'dark' ? 'bx-sun' : 'bx-moon');
+            applyGlobalTheme();
         });
-        overlay.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
-        });
+    }
+
+    let transactions = [];
+    let wallets = [];
+
+    const categories = {
+        expense: ['Ăn uống 🍜', 'Tiền trọ 🏠', 'Học phí/Sách vở 📚', 'Di chuyển 🛵', 'Giải trí 🎮', 'Khác 📦'],
+        income: ['Bố mẹ gửi 💸', 'Lương làm thêm 💼', 'Học bổng 🎓', 'Lì xì/Thưởng 🧧', 'Khác 📦']
+    };
+
+    function updateDropdown(type) {
+        const categorySelect = document.getElementById('category');
+        if (categorySelect) categorySelect.innerHTML = categories[type].map(c => `<option value="${c}">${c}</option>`).join('');
+    }
+
+    async function loadData() {
+        if (!currentUser) return;
+        try {
+            const [resTrans, resWallets] = await Promise.all([
+                fetch('http://127.0.0.1:5000/get_transactions', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({username: currentUser}) }),
+                fetch('http://127.0.0.1:5000/get_wallets', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({username: currentUser}) })
+            ]);
+            transactions = await resTrans.json();
+            wallets = await resWallets.json();
+            render();
+            updateWalletSelect();
+        } catch (e) { console.error("Lỗi:", e); }
+    }
+
+    function updateWalletSelect() {
+        const walletSelect = document.getElementById('wallet-select');
+        if (!walletSelect) return;
+        const mainName = localStorage.getItem('sw_BookName') || 'Ví chính';
+        let html = `<option value="w_main">${mainName} (Mặc định)</option>`;
+        wallets.forEach(w => { if(w.id !== 'w_main') html += `<option value="${w.id}">${w.name} (${w.type})</option>`; });
+        walletSelect.innerHTML = html;
     }
 
     const notifBtn = document.getElementById('notification-btn');
     const notifDropdown = document.getElementById('notification-dropdown');
-
     if (notifBtn && notifDropdown) {
         notifBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -44,187 +98,93 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const themeToggle = document.getElementById('theme-toggle');
-    const root = document.documentElement;
-
-    if (themeToggle) {
-        const icon = themeToggle.querySelector('i');
-        if (localStorage.getItem('sw_Theme') === 'dark') {
-            root.setAttribute('data-theme', 'dark');
-            if (icon) icon.classList.replace('bx-moon', 'bx-sun');
-        }
-
-        themeToggle.addEventListener('click', () => {
-            const isDark = root.getAttribute('data-theme') === 'dark';
-            if (isDark) {
-                root.removeAttribute('data-theme');
-                if (icon) icon.classList.replace('bx-sun', 'bx-moon');
-                localStorage.setItem('sw_Theme', 'light');
-            } else {
-                root.setAttribute('data-theme', 'dark');
-                if (icon) icon.classList.replace('bx-moon', 'bx-sun');
-                localStorage.setItem('sw_Theme', 'dark');
-            }
-        });
-    }
-
-    const modal = document.getElementById('modal-overlay');
-    const form = document.getElementById('transaction-form');
-    const categorySelect = document.getElementById('category');
-
-    let transactions = [];
-
-    async function loadTransactions() {
-        const currentUser = localStorage.getItem('sw_currentUser');
-        if (!currentUser) return;
-
-        try {
-            const response = await fetch('http://127.0.0.1:5000/get_transactions', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: currentUser })
-            });
-            if (response.ok) {
-                transactions = await response.json();
-                render();
-            }
-        } catch (error) {
-            console.error("Lỗi lấy dữ liệu:", error);
-        }
-    }
-
-    const categories = {
-        expense: ['Ăn uống 🍜', 'Tiền trọ 🏠', 'Học phí/Sách vở 📚', 'Di chuyển 🛵', 'Giải trí 🎮', 'Khác 📦'],
-        income: ['Bố mẹ gửi 💸', 'Lương làm thêm 💼', 'Học bổng 🎓', 'Lì xì/Thưởng 🧧', 'Khác 📦']
-    };
-
-    function updateDropdown(type) {
-        if (categorySelect) {
-            categorySelect.innerHTML = categories[type].map(c => `<option value="${c}">${c}</option>`).join('');
-        }
-    }
-
     function render() {
         let inc = 0, exp = 0;
         const list = document.getElementById('transaction-list');
         const emptyState = document.getElementById('empty-state');
-
         if (!list) return;
         list.innerHTML = '';
 
-        if (transactions.length === 0) {
-            if (emptyState) emptyState.style.display = 'block';
-        } else {
-            if (emptyState) emptyState.style.display = 'none';
-        }
+        const mainName = localStorage.getItem('sw_BookName') || 'Ví chính';
+        const sortedTrans = [...transactions].reverse();
 
-        const sortedTransactions = [...transactions].reverse();
-
-        sortedTransactions.forEach(t => {
-            if (t.type === 'income') inc += t.amount;
-            else exp += t.amount;
-
+        sortedTrans.forEach(t => {
+            if (t.type === 'income') inc += t.amount; else exp += t.amount;
             const isIncome = t.type === 'income';
-            const tr = document.createElement('tr');
+            let wInfo = wallets.find(w => w.id === t.walletId);
+            let displayWalletName = wInfo ? wInfo.name : mainName;
 
+            const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td>${t.date}</td>
-                <td><span class="cat-badge">${t.category}</span></td>
+                <td><span class="cat-badge">${t.category}</span><br><small style="color:var(--text-muted)">${displayWalletName}</small></td>
                 <td>${t.note || '-'}</td>
-                <td class="text-right ${isIncome ? 'text-green' : 'text-red'}">
-                    <strong>${isIncome ? '+' : '-'}${new Intl.NumberFormat('vi-VN').format(t.amount)} ₫</strong>
-                </td>
-                <td style="text-align: center;">
-                    <button class="btn-delete" data-id="${t.id}" title="Xóa">
-                        <i class='bx bx-trash'></i>
-                    </button>
-                </td>
+                <td class="text-right ${isIncome ? 'text-green' : 'text-red'}"><strong>${isIncome ? '+' : '-'}${new Intl.NumberFormat('vi-VN').format(t.amount)} ₫</strong></td>
+                <td style="text-align: center;"><button class="btn-delete" data-id="${t.id}"><i class='bx bx-trash'></i></button></td>
             `;
             list.appendChild(tr);
         });
 
-        const balance = inc - exp;
+        document.getElementById('total-income').innerText = '+' + new Intl.NumberFormat('vi-VN').format(inc) + ' ₫';
+        document.getElementById('total-expense').innerText = '-' + new Intl.NumberFormat('vi-VN').format(exp) + ' ₫';
 
-        if (document.getElementById('total-income')) document.getElementById('total-income').innerText = '+' + new Intl.NumberFormat('vi-VN').format(inc) + ' ₫';
-        if (document.getElementById('total-expense')) document.getElementById('total-expense').innerText = '-' + new Intl.NumberFormat('vi-VN').format(exp) + ' ₫';
+        const mainBalance = parseInt(localStorage.getItem('sw_Balance')) || 0;
+        const allWallets = wallets.length ? wallets : [{id: 'w_main', name: mainName, type: 'Tiền mặt', initial_balance: mainBalance}];
 
-        const balanceEl = document.getElementById('total-balance');
-        if (balanceEl) {
-            balanceEl.innerText = new Intl.NumberFormat('vi-VN').format(balance) + ' ₫';
-        }
+        let totalAssetsOnly = 0;
+        allWallets.forEach(w => {
+            if (w.type === 'Nợ') return;
+            const wTrans = transactions.filter(t => t.walletId === w.id || (w.id === 'w_main' && t.walletId === 'w_main'));
+            const bal = (w.initial_balance || 0) + wTrans.reduce((acc, t) => t.type === 'income' ? acc + t.amount : acc - t.amount, 0);
+            totalAssetsOnly += bal;
+        });
+        document.getElementById('total-balance').innerText = new Intl.NumberFormat('vi-VN').format(totalAssetsOnly) + ' ₫';
 
         document.querySelectorAll('.btn-delete').forEach(btn => {
-            btn.addEventListener('click', async function() {
-                const id = parseInt(this.getAttribute('data-id'));
-                const currentUser = localStorage.getItem('sw_currentUser');
-
+            btn.onclick = async function() {
                 if(confirm('Bạn có chắc chắn muốn xóa giao dịch này?')) {
-                    try {
-                        const response = await fetch('http://127.0.0.1:5000/delete_transaction', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ id: id, username: currentUser })
-                        });
-
-                        if (response.ok) {
-                            loadTransactions();
-                        }
-                    } catch (error) {
-                        alert("Lỗi khi xóa!");
-                    }
+                    await fetch('http://127.0.0.1:5000/delete_transaction', {
+                        method: 'POST', headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ id: parseInt(this.getAttribute('data-id')), username: currentUser })
+                    });
+                    loadData();
                 }
-            });
+            };
         });
+
+        emptyState.style.display = transactions.length === 0 ? 'block' : 'none';
     }
 
     updateDropdown('expense');
+    loadData();
 
-    const openModalBtn = document.getElementById('open-modal');
-    const closeModalBtn = document.getElementById('close-modal');
-    if (openModalBtn) openModalBtn.onclick = () => modal.classList.add('active');
-    if (closeModalBtn) closeModalBtn.onclick = () => modal.classList.remove('active');
+    const modal = document.getElementById('modal-overlay');
+    document.getElementById('open-modal').onclick = () => modal.classList.add('active');
+    document.getElementById('close-modal').onclick = () => modal.classList.remove('active');
 
-    document.querySelectorAll('input[name="trans-type"]').forEach(radio => {
-        radio.addEventListener('change', (e) => updateDropdown(e.target.value));
-    });
+    document.querySelectorAll('input[name="trans-type"]').forEach(radio => radio.addEventListener('change', (e) => updateDropdown(e.target.value)));
+
+    const form = document.getElementById('transaction-form');
     if (form) {
         form.onsubmit = async (e) => {
             e.preventDefault();
-
-            const currentUser = localStorage.getItem('sw_currentUser');
-            const type = document.querySelector('input[name="trans-type"]:checked').value;
             const amount = parseInt(document.getElementById('amount').value);
+            if (!amount || amount <= 0) return alert("Vui lòng nhập số tiền!");
+            const walletSelect = document.getElementById('wallet-select');
 
-            if (!amount || amount <= 0) {
-                alert("Vui lòng nhập số tiền hợp lệ!");
-                return;
-            }
+            await fetch('http://127.0.0.1:5000/add_transaction', {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    username: currentUser, category: document.getElementById('category').value,
+                    walletId: walletSelect ? walletSelect.value : 'w_main', note: document.getElementById('note').value,
+                    amount: amount, type: document.querySelector('input[name="trans-type"]:checked').value
+                })
+            });
 
-            const newEntry = {
-                username: currentUser,
-                category: categorySelect.value,
-                note: document.getElementById('note').value || 'Không có ghi chú',
-                amount: amount,
-                type: type
-            };
-
-            try {
-                const response = await fetch('http://127.0.0.1:5000/add_transaction', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(newEntry)
-                });
-
-                if (response.ok) {
-                    if (modal) modal.classList.remove('active');
-                    form.reset();
-                    updateDropdown('expense');
-                    loadTransactions();
-                }
-            } catch (error) {
-                alert("Lỗi kết nối server!");
-            }
+            loadData();
+            modal.classList.remove('active');
+            form.reset();
+            updateDropdown('expense');
         };
     }
-    loadTransactions();
 });

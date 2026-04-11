@@ -29,7 +29,10 @@
             </div>
             <div class="form-group">
                 <label>Mật khẩu</label>
-                <input type="password" id="login-password" placeholder="Nhập mật khẩu...">
+                <div class="password-wrapper">
+                    <input type="password" id="login-password" placeholder="Nhập mật khẩu của bạn">
+                    <i class='bx bx-show toggle-password' onclick="togglePassword('login-password', this)"></i>
+                </div>
             </div>
             <p id="login-error" class="error-text"></p>
             <button class="btn" onclick="handleAuth('login')">Đăng nhập</button>
@@ -44,13 +47,30 @@
                 <input type="text" id="reg-username" placeholder="Tạo tên đăng nhập...">
             </div>
             <div class="form-group">
-                <label>Mật khẩu</label>
-                <input type="password" id="reg-password" placeholder="Tạo mật khẩu...">
+                <label>Mật khẩu <span style="color: #ef4444; font-weight: bold;">*</span></label>
+                <div class="password-wrapper">
+                    <input type="password" id="reg-password" placeholder="Nhập mật khẩu mới">
+                    <i class='bx bx-show toggle-password' onclick="togglePassword('reg-password', this)"></i>
+                </div>
+
+                <div id="password-rules" class="password-rules" style="display: none;">
+                    <p>Mật khẩu mới phải có ít nhất một:</p>
+                    <ul>
+                        <li id="rule-length" class="invalid"><i class='bx bxs-error-circle'></i> Gồm 8–60 ký tự</li>
+                        <li id="rule-lower" class="invalid"><i class='bx bxs-error-circle'></i> Chữ cái viết thường</li>
+                        <li id="rule-upper" class="invalid"><i class='bx bxs-error-circle'></i> Chữ cái viết hoa</li>
+                        <li id="rule-number" class="invalid"><i class='bx bxs-error-circle'></i> Số</li>
+                        <li id="rule-special" class="invalid"><i class='bx bxs-error-circle'></i> Ký tự đặc biệt</li>
+                    </ul>
+                </div>
             </div>
 
             <div class="form-group">
                 <label>Nhập lại mật khẩu</label>
-                <input type="password" id="reg-password-confirm" placeholder="Xác nhận mật khẩu...">
+                <div class="password-wrapper">
+                    <input type="password" id="reg-password-confirm" placeholder="Nhập lại mật khẩu">
+                    <i class='bx bx-show toggle-password' onclick="togglePassword('reg-password-confirm', this)"></i>
+                </div>
             </div>
             <p id="reg-error" class="error-text"></p>
             <button class="btn" onclick="handleAuth('register')">Đăng ký & Tiếp tục</button>

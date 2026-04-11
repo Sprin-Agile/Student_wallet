@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ngân sách - Student Wallet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="../assets/css/home.css">
+    <link rel="stylesheet" href="../assets/css/budget.css">
+</head>
+<body>
+<div id="sidebar-overlay" class="overlay"></div>
+<div class="app-container">
+    <aside class="sidebar" id="sidebar">
+        <div class="logo">
+            <i class='bx bx-wallet-alt'></i>
+            <span>Student Wallet</span>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="../danh_muc_web/home.html"><i class='bx bx-grid-alt'></i> Tổng quan</a></li>
+            <li><a href="../danh_muc_web/my_wallet.html"><i class='bx bx-wallet'></i> Ví tiền của tôi</a></li>
+            <li><a href="../danh_muc_web/transaction.html"><i class='bx bx-list-ul'></i> Giao dịch</a></li>
+            <li><a href="../danh_muc_web/statistics.html"><i class='bx bx-pie-chart-alt-2'></i> Thống kê</a></li>
+            <li class="active"><a href="../danh_muc_web/budget.html"><i class='bx bx-target-lock'></i> Ngân sách</a></li>
+        </ul>
+        <div class="bottom-menu">
+            <a href="#"><i class='bx bx-cog'></i> Cài đặt</a>
+            <a href="../index.html"><i class='bx bx-log-out'></i> Đăng xuất</a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="top-header">
+            <div class="header-left">
+                <button id="menu-toggle" class="mobile-only icon-btn"><i class='bx bx-menu'></i></button>
+                <div>
+                    <h2 class="page-title">Ngân sách chi tiêu 🎯</h2>
+                    <p class="text-muted">Hôm nay là: <strong id="current-date" style="color: var(--primary);"></strong></p>
+                </div>
+            </div>
+            <div class="header-right">
+                <!-- mode dark/light -->
+                <button id="theme-toggle" class="icon-btn"><i class='bx bx-moon'></i></button>
+
+                <div class="notification-wrapper">
+                    <button id="notification-btn" class="icon-btn">
+                        <i class='bx bx-bell'></i>
+                        <span class="badge">2</span>
+                    </button>
+                    <!-- thông báo -->
+                    <div class="notification-dropdown" id="notification-dropdown">
+                        <div class="notif-header">
+                            <h4>Thông báo</h4>
+                            <span class="mark-read">Đánh dấu đã đọc</span>
+                        </div>
+                        <div class="notif-body">
+                            <div class="notif-item unread">
+                                <div class="notif-icon primary"><i class='bx bx-target-lock'></i></div>
+                                <div class="notif-content">
+                                    <p><strong>Mục tiêu tiết kiệm:</strong> Cố lên! Bạn đang tiến gần đến mục tiêu của mình rồi! 🎉</p>
+                                    <span class="notif-time">Vừa xong</span>
+                                </div>
+                            </div>
+                            <div class="notif-item">
+                                <div class="notif-icon warning"><i class='bx bx-pie-chart-alt-2'></i></div>
+                                <div class="notif-content">
+                                    <p><strong>Nhắc nhở:</strong> Đừng quên ghi chép lại các khoản chi tiêu ngày hôm nay nhé!</p>
+                                    <span class="notif-time">2 giờ trước</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="notif-footer">
+                            <a href="#">Xem tất cả thông báo</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="user-avatar">
+                    <img src="https://ui-avatars.com/api/?name=Student+Wallet&background=4facfe&color=fff" alt="Avatar">
+                </div>
+            </div>
+        </header>
+
+        <div class="panel-header tx-section-header" style="display: flex; justify-content: space-between; align-items: center; margin: 20px 0;">
+            <h3 class="tx-section-title" style="margin: 0;">Hạn mức tháng</h3>
+            <button class="btn btn-primary btn-add-tx" id="open-budget-modal-header" style="background: var(--user-theme) !important; border: none; color: white; padding: 10px 20px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 600;">
+                <i class='bx bx-plus'></i> Thêm ngân sách tháng
+            </button>
+        </div>
+
+        <div id="budget-list-container"></div>
+    </main>
+</div>
+
+<div class="sw-modal-overlay" id="budget-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
+    <div class="sw-modal-content" style="background: var(--card-bg, #fff); padding: 30px; border-radius: 25px; width: 90%; max-width: 400px; position: relative;">
+        <button class="sw-modal-close" id="close-budget-modal" style="position: absolute; right: 20px; top: 20px; border: none; background: none; font-size: 24px; cursor: pointer; color: var(--text-main);">&times;</button>
+        <div class="sw-modal-header" id="modal-title" style="font-size: 1.2rem; font-weight: 700; margin-bottom: 20px;">Thiết lập hạn mức</div>
+        <form id="budget-form">
+            <div class="sw-form-group" id="name-group" style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 500;">Tên ngân sách</label>
+                <input type="text" id="budget-name-input" placeholder="VD: Tiền ăn tháng 4" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd; outline: none; box-sizing: border-box;">
+            </div>
+            <div class="sw-form-group" id="category-group" style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 500;">Danh mục chi tiêu</label>
+                <select id="budget-category" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd; outline: none; box-sizing: border-box;">
+                    <option value="Ăn uống 🍜">Ăn uống 🍜</option>
+                    <option value="Tiền trọ 🏠">Tiền trọ 🏠</option>
+                    <option value="Di chuyển 🛵">Di chuyển 🛵</option>
+                    <option value="Học phí/Sách vở 📚">Học phí/Sách vở 📚</option>
+                    <option value="Giải trí 🎮">Giải trí 🎮</option>
+                </select>
+            </div>
+            <div class="sw-form-group" style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 500;">Số tiền giới hạn (₫)</label>
+                <input type="number" id="budget-limit" required min="1000" placeholder="0" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd; outline: none; box-sizing: border-box;">
+            </div>
+            <button type="submit" class="sw-btn-submit" style="width: 100%; padding: 12px; background: var(--user-theme); color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;">Lưu ngân sách</button>
+        </form>
+    </div>
+</div>
+
+<script src="../assets/js/budget.js"></script>
+</body>
+</html>

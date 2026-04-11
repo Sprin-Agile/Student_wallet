@@ -21,11 +21,11 @@
                 <span>Student Wallet</span>
             </div>
             <ul class="nav-menu">
-                <li><a href="home.html"><i class='bx bx-grid-alt'></i> Tổng quan</a></li>
-                <li id="menu-wallets"><a href="my_wallet.html"><i class='bx bx-wallet'></i> Ví tiền của tôi</a></li>
-                <li><a href="transaction.html"><i class='bx bx-list-ul'></i> Giao dịch</a></li>
-                <li class="active"><a href="statistics.html"><i class='bx bx-pie-chart-alt-2'></i> Thống kê</a></li>
-                <li><a href="#"><i class='bx bx-target-lock'></i> Ngân sách</a></li>
+                <li><a href="../danh_muc_web/home.html"><i class='bx bx-grid-alt'></i> Tổng quan</a></li>
+                <li id="menu-wallets"><a href="../danh_muc_web/my_wallet.html"><i class='bx bx-wallet'></i> Ví tiền của tôi</a></li>
+                <li><a href="../danh_muc_web/transaction.html"><i class='bx bx-list-ul'></i> Giao dịch</a></li>
+                <li class="active"><a href="../danh_muc_web/statistics.html"><i class='bx bx-pie-chart-alt-2'></i> Thống kê</a></li>
+                <li><a href="../danh_muc_web/budget.html"><i class='bx bx-target-lock'></i> Ngân sách</a></li>
             </ul>
             <div class="bottom-menu">
                 <a href="#"><i class='bx bx-cog'></i> Cài đặt</a>
@@ -43,15 +43,17 @@
                         <p class="text-muted">Hôm nay là: <strong id="current-date" style="color: var(--primary);"></strong></p>
                     </div>
                 </div>
-                
+
                 <div class="header-right">
-                    <button id="theme-toggle" class="icon-btn no-shrink"><i class='bx bx-moon'></i></button>
-                    
-                    <div class="notification-wrapper no-shrink">
+                    <!-- mode dark/light -->
+                    <button id="theme-toggle" class="icon-btn"><i class='bx bx-moon'></i></button>
+
+                    <div class="notification-wrapper">
                         <button id="notification-btn" class="icon-btn">
                             <i class='bx bx-bell'></i>
                             <span class="badge">2</span>
                         </button>
+                        <!-- thông báo -->
                         <div class="notification-dropdown" id="notification-dropdown">
                             <div class="notif-header">
                                 <h4>Thông báo</h4>
@@ -61,15 +63,25 @@
                                 <div class="notif-item unread">
                                     <div class="notif-icon primary"><i class='bx bx-target-lock'></i></div>
                                     <div class="notif-content">
-                                        <p><strong>Mục tiêu:</strong> Cố lên! Bạn đang tiến gần đến mục tiêu! 🎉</p>
+                                        <p><strong>Mục tiêu tiết kiệm:</strong> Cố lên! Bạn đang tiến gần đến mục tiêu của mình rồi! 🎉</p>
+                                        <span class="notif-time">Vừa xong</span>
+                                    </div>
+                                </div>
+                                <div class="notif-item">
+                                    <div class="notif-icon warning"><i class='bx bx-pie-chart-alt-2'></i></div>
+                                    <div class="notif-content">
+                                        <p><strong>Nhắc nhở:</strong> Đừng quên ghi chép lại các khoản chi tiêu ngày hôm nay nhé!</p>
+                                        <span class="notif-time">2 giờ trước</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="notif-footer"><a href="#">Xem tất cả</a></div>
+                            <div class="notif-footer">
+                                <a href="#">Xem tất cả thông báo</a>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="user-avatar no-shrink">
+                    <div class="user-avatar">
                         <img src="https://ui-avatars.com/api/?name=Student+Wallet&background=4facfe&color=fff" alt="Avatar">
                     </div>
                 </div>

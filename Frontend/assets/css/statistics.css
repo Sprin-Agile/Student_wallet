@@ -1,4 +1,4 @@
-/* Layout & Container */
+
 .statistics-section {
     display: flex;
     justify-content: center;
@@ -12,7 +12,6 @@
     max-width: 900px;
 }
 
-/* Panel Header & Filters */
 .statistics-panel-header {
     align-items: center;
     flex-wrap: wrap;
@@ -51,7 +50,6 @@
     outline: none;
 }
 
-/* Stat Cards */
 .statistics-stat-cards {
     grid-template-columns: 1fr 1fr;
     margin-bottom: 20px;
@@ -61,7 +59,6 @@
     box-shadow: none;
 }
 
-/* Chart Container & Empty State */
 .statistics-chart-container {
     height: 400px;
     min-height: 400px;
@@ -76,7 +73,6 @@
     margin-top: 20px;
 }
 
-/* Saving Status Container */
 #saving-status-container {
     display: none;
     text-align: center;
@@ -95,4 +91,14 @@
     justify-content: center;
     gap: 8px;
     font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+    .statistics-stat-cards {
+        grid-template-columns: 1fr !important;
+    }
+    .statistics-chart-container {
+        height: 300px !important;
+        min-height: 300px !important;
+    }
 }

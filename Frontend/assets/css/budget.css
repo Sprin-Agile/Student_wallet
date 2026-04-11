@@ -1,0 +1,23 @@
+.page-title {
+    font-weight: 700;
+}
+
+.panel-header {
+    background: transparent;
+    border-radius: 0;
+    padding: 10px 0;
+}
+
+.tx-section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+[data-theme="dark"] {
+    --card-bg: #1a1b1e;
+    --text-main: #ffffff;
+    --text-muted: #a0a0a0;
+    --border: #2c2d30;
+    --bg-body: #0f1012;
+}
