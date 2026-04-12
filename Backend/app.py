@@ -3,6 +3,9 @@ from flask_cors import CORS
 import mysql.connector
 from werkzeug.security import generate_password_hash, check_password_hash # <--- THÊM DÒNG NÀY
 import os
+from dotenv import load_dotenv
+dotenv_path = os.path.join(os.path.dirname(__file__), '..', '.env')
+load_dotenv(dotenv_path)
 
 app = Flask(__name__)
 CORS(app)
@@ -10,17 +13,16 @@ CORS(app)
 DB_CONFIG = {
     "host": "mysql-student-wallet-student-d520.b.aivencloud.com",
     "user": "avnadmin",
-    "password": os.environ.get("DB_PASSWORD"),
+    "password": os.environ.get("DB_PASSWORD"), 
     "database": "defaultdb",
     "port": 14854
 }
-
 def get_db_connection():
     try:
         conn = mysql.connector.connect(**DB_CONFIG)
         return conn
     except mysql.connector.Error as err:
-        print(f"❌ LỖI KẾT NỐI DATABASE: {err}") 
+        print(f"❌ LỖI KẾT NỐI DATABASE: {err}")
         return None
 
 # --- XÁC THỰC ---
