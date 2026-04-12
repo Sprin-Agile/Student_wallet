@@ -16,23 +16,35 @@ DB_CONFIG = {
 }
 
 def get_db_connection():
-    return mysql.connector.connect(**DB_CONFIG)
+    try:
+        conn = mysql.connector.connect(**DB_CONFIG)
+        return conn
+    except mysql.connector.Error as err:
+        print(f"❌ LỖI KẾT NỐI DATABASE: {err}") 
+        return None
 
 # --- XÁC THỰC ---
 @app.route('/register', methods=['POST'])
 def register():
     data = request.json
     username, password = data.get('username'), data.get('password')
+
     db = get_db_connection()
+    if db is None:
+        return jsonify({"error": "Không thể kết nối cơ sở dữ liệu. Hãy kiểm tra DB_PASSWORD trên Render!"}), 500
+
     cursor = db.cursor()
     try:
-        # Băm mật khẩu trước khi lưu vào DB
         hashed_pw = generate_password_hash(password)
         cursor.execute("INSERT INTO users (username, password) VALUES (%s, %s)", (username, hashed_pw))
         db.commit()
         return jsonify({"message": "Đăng ký thành công!", "user": username}), 201
-    except:
-        return jsonify({"error": "Tên đăng nhập đã tồn tại!"}), 400
+    except mysql.connector.Error as err:
+        # Nếu lỗi là trùng tên đăng nhập (mã 1062)
+        if err.errno == 1062:
+            return jsonify({"error": "Tên đăng nhập này đã có người dùng rồi!"}), 400
+        print(f"❌ LỖI SQL: {err}")
+        return jsonify({"error": "Lỗi hệ thống khi đăng ký!"}), 500
     finally:
         cursor.close()
         db.close()
