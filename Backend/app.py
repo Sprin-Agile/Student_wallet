@@ -2,15 +2,17 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import mysql.connector
 from werkzeug.security import generate_password_hash, check_password_hash # <--- THÊM DÒNG NÀY
+import os
 
 app = Flask(__name__)
 CORS(app)
 
 DB_CONFIG = {
-    "host": "localhost",
-    "user": "root",
-    "password": "383834",
-    "database": "student_wallet"
+    "host": "mysql-student-wallet-student-d520.b.aivencloud.com",
+    "user": "avnadmin",
+    "password": os.environ.get("DB_PASSWORD"),
+    "database": "defaultdb",
+    "port": 14854
 }
 
 def get_db_connection():

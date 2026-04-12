@@ -157,8 +157,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const mainIcon = localStorage.getItem('sw_Icon') || 'bx-wallet';
             const mainBalance = parseFloat(localStorage.getItem('sw_Balance')) || 0;
 
-            if (wallets.length === 0) {
-                wallets = [{ id: 'w_main', name: mainName, type: 'Tiền mặt', icon: mainIcon, initial_balance: mainBalance }];
+            if (!wallets.some(w => w.id === 'w_main')) {
+                wallets.unshift({ id: 'w_main', name: mainName, type: 'Tiền mặt', icon: mainIcon, initial_balance: mainBalance });
             }
 
             transactions.forEach(t => {
@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             wallets.forEach(w => {
-                let wBalance = (parseFloat(w.id === 'w_main' ? mainBalance : w.initial_balance) || 0);
+                let wBalance = parseFloat(w.initial_balance) || 0;
                 const wTrans = transactions.filter(t => t.walletId === w.id || (w.id === 'w_main' && t.walletId === 'w_main'));
 
                 wTrans.forEach(t => {

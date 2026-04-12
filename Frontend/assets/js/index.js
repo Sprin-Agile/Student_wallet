@@ -163,6 +163,26 @@ async function goToDashboard() {
     localStorage.setItem('sw_Color', tempData.color);
     localStorage.setItem('sw_NewAccount', 'true');
 
+    // --- SỬA Ở ĐÂY: THÊM ĐOẠN CODE NÀY ĐỂ LƯU VÍ CHÍNH VÀO MYSQL ---
+    const currentUser = localStorage.getItem('sw_currentUser');
+    if (currentUser) {
+        try {
+            await fetch('http://127.0.0.1:5000/add_wallet', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    id: 'w_main',
+                    username: currentUser,
+                    name: tempData.bookName || 'Ví chính',
+                    type: 'Tiền mặt',
+                    icon: tempData.iconSelected || 'bx-wallet',
+                    initialBalance: tempData.balance || 0
+                })
+            });
+        } catch(e) {
+            console.error("Lỗi lưu ví chính:", e);
+        }
+    }
 
     window.location.href = 'danh_muc_web/home.html';
 }

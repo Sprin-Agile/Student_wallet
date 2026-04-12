@@ -73,9 +73,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const mainName = localStorage.getItem('sw_BookName') || 'Ví chính';
         const mainIcon = localStorage.getItem('sw_Icon') || 'bx-wallet';
         const mainBalance = parseInt(localStorage.getItem('sw_Balance')) || 0;
-        const mainWallet = wallets.find(w => w.id === 'w_main') || { id: 'w_main', name: mainName, initial_balance: mainBalance, type: 'Tiền mặt', icon: mainIcon };
+        const mainWallet = { id: 'w_main', name: mainName, initial_balance: mainBalance, type: 'Tiền mặt', icon: mainIcon };
 
-        const allWallets = wallets.length ? wallets : [mainWallet];
+        let allWallets = wallets.some(w => w.id === 'w_main') ? wallets : [mainWallet, ...wallets];
+
+        allWallets.sort((a, b) => {
+            if (a.id === 'w_main') return -1;
+            if (b.id === 'w_main') return 1;
+            
+            return a.id.localeCompare(b.id);
+        });
 
         allWallets.forEach(wallet => {
             const walletTx = transactions.filter(t => t.walletId === wallet.id || (wallet.id === 'w_main' && t.walletId === 'w_main'));

@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     let transactions = [];
+    let wallets = [];
     Chart.register(ChartDataLabels);
     let expensePieChart = null;
     const pieCtxElement = document.getElementById('expensePieChart');
@@ -88,19 +89,26 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     }
                 }
-            } // <--- ĐÃ BỔ SUNG DẤU NGOẶC NÀY ĐỂ SỬA LỖI!
+            }
         });
     }
 
     async function loadDataForStats() {
         if (!currentUser) return;
         try {
-            const res = await fetch('http://127.0.0.1:5000/get_transactions', {
-                method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: currentUser })
-            });
-            if (res.ok) {
-                transactions = await res.json();
+            const [resTrans, resWallets] = await Promise.all([
+                fetch('http://127.0.0.1:5000/get_transactions', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: currentUser })
+                }),
+                fetch('http://127.0.0.1:5000/get_wallets', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: currentUser })
+                })
+            ]);
+            if (resTrans.ok && resWallets.ok) {
+                transactions = await resTrans.json();
+                wallets = await resWallets.json();
                 updatePieChart();
             }
         } catch (error) { console.error("Lỗi:", error); }
@@ -172,15 +180,29 @@ document.addEventListener('DOMContentLoaded', () => {
         if (document.getElementById('stat-income-val')) document.getElementById('stat-income-val').textContent = '+' + new Intl.NumberFormat('vi-VN').format(totalIncomeFiltered) + ' đ';
         if (document.getElementById('stat-expense-val')) document.getElementById('stat-expense-val').textContent = '-' + new Intl.NumberFormat('vi-VN').format(totalExpenseFiltered) + ' đ';
 
+        const mainName = localStorage.getItem('sw_BookName') || 'Ví chính';
+        const mainBalance = parseInt(localStorage.getItem('sw_Balance')) || 0;
+        const allWallets = wallets.some(w => w.id === 'w_main') ? wallets : [{id: 'w_main', name: mainName, type: 'Tiền mặt', initial_balance: mainBalance}, ...wallets];
+
+        let totalAssetsOnly = 0;
+        allWallets.forEach(w => {
+            if (w.type === 'Nợ') return; // Không cộng dồn các khoản Nợ
+            // Lấy tất cả giao dịch thuộc về ví này (không bị ảnh hưởng bởi bộ lọc thời gian)
+            const wTrans = transactions.filter(t => t.walletId === w.id || (w.id === 'w_main' && t.walletId === 'w_main'));
+            const bal = (w.initial_balance || 0) + wTrans.reduce((acc, t) => t.type === 'income' ? acc + t.amount : acc - t.amount, 0);
+            totalAssetsOnly += bal;
+        });
+
+        // --- CẬP NHẬT GIAO DIỆN HIỂN THỊ ---
         const savingContainer = document.getElementById('saving-status-container');
-        const savingVal = document.getElementById('saving-val');
-        if (savingContainer && savingVal) {
-            if (totalIncomeFiltered > totalExpenseFiltered) {
-                const savedAmount = totalIncomeFiltered - totalExpenseFiltered;
-                savingVal.textContent = '+' + new Intl.NumberFormat('vi-VN').format(savedAmount) + ' đ';
-                savingContainer.style.display = 'block';
+        const savingHeading = document.querySelector('.statistics-saving-heading');
+
+        if (savingContainer && savingHeading) {
+            savingContainer.style.display = 'block';
+            if (totalAssetsOnly >= 0) {
+                savingHeading.innerHTML = `<i class='bx bx-wallet'></i> Tổng tài sản hiện tại: <strong id="saving-val" style="color: #10b981;">+${new Intl.NumberFormat('vi-VN').format(totalAssetsOnly)} đ</strong>`;
             } else {
-                savingContainer.style.display = 'none';
+                savingHeading.innerHTML = `<i class='bx bx-wallet'></i> Tổng tài sản hiện tại: <strong id="saving-val" style="color: #ef4444;">${new Intl.NumberFormat('vi-VN').format(totalAssetsOnly)} đ</strong>`;
             }
         }
     }

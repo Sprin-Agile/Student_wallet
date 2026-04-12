@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:mysql://localhost:3306/student_wallet</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="defaultdb@mysql-student-wallet-student-d520.b.aivencloud.com" uuid="32ff936c-8dc7-429f-a6a6-4fc2cc2fcfd2">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://mysql-student-wallet-student-d520.b.aivencloud.com:14854/defaultdb</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

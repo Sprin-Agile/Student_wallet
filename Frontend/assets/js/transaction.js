@@ -79,8 +79,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const walletSelect = document.getElementById('wallet-select');
         if (!walletSelect) return;
         const mainName = localStorage.getItem('sw_BookName') || 'Ví chính';
-        let html = `<option value="w_main">${mainName} (Mặc định)</option>`;
-        wallets.forEach(w => { if(w.id !== 'w_main') html += `<option value="${w.id}">${w.name} (${w.type})</option>`; });
+        let html = `<option value="" disabled selected>-- Chọn ví giao dịch --</option>`;
+        html += `<option value="w_main">${mainName} (Mặc định)</option>`;
+
+        wallets.forEach(w => {
+            if(w.id !== 'w_main') html += `<option value="${w.id}">${w.name} (${w.type})</option>`;
+        });
         walletSelect.innerHTML = html;
     }
 
@@ -129,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('total-expense').innerText = '-' + new Intl.NumberFormat('vi-VN').format(exp) + ' ₫';
 
         const mainBalance = parseInt(localStorage.getItem('sw_Balance')) || 0;
-        const allWallets = wallets.length ? wallets : [{id: 'w_main', name: mainName, type: 'Tiền mặt', initial_balance: mainBalance}];
+        const allWallets = wallets.some(w => w.id === 'w_main') ? wallets : [{id: 'w_main', name: mainName, type: 'Tiền mặt', initial_balance: mainBalance}, ...wallets];
 
         let totalAssetsOnly = 0;
         allWallets.forEach(w => {
@@ -170,14 +174,22 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const amount = parseInt(document.getElementById('amount').value);
             if (!amount || amount <= 0) return alert("Vui lòng nhập số tiền!");
+
             const walletSelect = document.getElementById('wallet-select');
+            const selectedWallet = walletSelect ? walletSelect.value : '';
+
+            // CẬP NHẬT: Kiểm tra xem người dùng đã chọn ví chưa
+            if (!selectedWallet) return alert("Bạn ơi, vui lòng chọn ví giao dịch nhé!");
 
             await fetch('http://127.0.0.1:5000/add_transaction', {
                 method: 'POST', headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
-                    username: currentUser, category: document.getElementById('category').value,
-                    walletId: walletSelect ? walletSelect.value : 'w_main', note: document.getElementById('note').value,
-                    amount: amount, type: document.querySelector('input[name="trans-type"]:checked').value
+                    username: currentUser,
+                    category: document.getElementById('category').value,
+                    walletId: selectedWallet, // Đẩy ID ví đã chọn vào DB
+                    note: document.getElementById('note').value,
+                    amount: amount,
+                    type: document.querySelector('input[name="trans-type"]:checked').value
                 })
             });
 
@@ -185,6 +197,8 @@ document.addEventListener('DOMContentLoaded', () => {
             modal.classList.remove('active');
             form.reset();
             updateDropdown('expense');
+            // CẬP NHẬT: Reset lại select box về trạng thái chưa chọn sau khi submit thành công
+            if(walletSelect) walletSelect.value = "";
         };
     }
 });

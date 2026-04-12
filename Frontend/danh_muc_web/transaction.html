@@ -20,11 +20,11 @@
                 <span>Student Wallet</span>
             </div>
             <ul class="nav-menu">
-                <li><a href="../danh_muc_web/home.html"><i class='bx bx-grid-alt'></i> Tổng quan</a></li>
-                <li id="menu-wallets"><a href="../danh_muc_web/my_wallet.html"><i class='bx bx-wallet'></i> Ví tiền của tôi</a></li>
-                <li class="active"><a href="../danh_muc_web/transaction.html"><i class='bx bx-list-ul'></i> Giao dịch</a></li>
-                <li><a href="../danh_muc_web/statistics.html"><i class='bx bx-pie-chart-alt-2'></i> Thống kê</a></li>
-                <li><a href="../danh_muc_web/budget.html"><i class='bx bx-target-lock'></i> Ngân sách</a></li>
+                <li><a href="home.html"><i class='bx bx-grid-alt'></i> Tổng quan</a></li>
+                <li id="menu-wallets"><a href="my_wallet.html"><i class='bx bx-wallet'></i> Ví tiền của tôi</a></li>
+                <li class="active"><a href="transaction.html"><i class='bx bx-list-ul'></i> Giao dịch</a></li>
+                <li><a href="statistics.html"><i class='bx bx-pie-chart-alt-2'></i> Thống kê</a></li>
+                <li><a href="budget.html"><i class='bx bx-target-lock'></i> Ngân sách</a></li>
             </ul>
             <div class="bottom-menu">
                 <a href="#"><i class='bx bx-cog'></i> Cài đặt</a>
@@ -164,7 +164,10 @@
                     <label>Số tiền (₫)</label>
                     <input type="number" id="amount" placeholder="Nhập số tiền..." required min="1000">
                 </div>
-
+                <div class="sw-form-group">
+                    <label>Chọn Ví giao dịch</label>
+                    <select id="wallet-select"></select>
+                </div>
                 <div class="sw-form-group">
                     <label>Danh mục</label>
                     <select id="category"></select>
