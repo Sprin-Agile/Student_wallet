@@ -60,8 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!container || !currentUser) return;
 
         const [resTrans, resWallets] = await Promise.all([
-            fetch('http://127.0.0.1:5000/get_transactions', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({username: currentUser}) }),
-            fetch('http://127.0.0.1:5000/get_wallets', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({username: currentUser}) })
+            fetch(`${API_URL}/get_transactions`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({username: currentUser}) }),
+            fetch(`${API_URL}/get_wallets`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({username: currentUser}) })
         ]);
 
         const transactions = await resTrans.json();
@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
         allWallets.sort((a, b) => {
             if (a.id === 'w_main') return -1;
             if (b.id === 'w_main') return 1;
-            
+
             return a.id.localeCompare(b.id);
         });
 
@@ -285,7 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!name) return alert('Vui lòng nhập tên ví!');
 
-        await fetch('http://127.0.0.1:5000/add_wallet', {
+        await fetch(`${API_URL}/add_wallet`, {
             method: 'POST', headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ id: 'w_' + Date.now(), username: currentUser, name, type: selectedType, icon: icons[selectedType], initialBalance: balance })
         });

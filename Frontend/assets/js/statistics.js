@@ -97,11 +97,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!currentUser) return;
         try {
             const [resTrans, resWallets] = await Promise.all([
-                fetch('http://127.0.0.1:5000/get_transactions', {
+                fetch(`${API_URL}/get_transactions`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username: currentUser })
                 }),
-                fetch('http://127.0.0.1:5000/get_wallets', {
+                fetch(`${API_URL}/get_wallets`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username: currentUser })
                 })

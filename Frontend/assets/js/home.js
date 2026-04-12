@@ -142,9 +142,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!currentUser) return;
         try {
             const [resTrans, resWallets, resGoal] = await Promise.all([
-                fetch('http://127.0.0.1:5000/get_transactions', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({username: currentUser}) }),
-                fetch('http://127.0.0.1:5000/get_wallets', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({username: currentUser}) }),
-                fetch('http://127.0.0.1:5000/get_goal', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({username: currentUser}) })
+                fetch(`${API_URL}/get_transactions`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({username: currentUser}) }),
+                fetch(`${API_URL}/get_wallets`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({username: currentUser}) }),
+                fetch(`${API_URL}/get_goal`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({username: currentUser}) })
             ]);
 
             const transactions = await resTrans.json();
@@ -238,7 +238,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!amount || amount <= 0) return alert("Vui lòng nhập số tiền!");
 
             try {
-                await fetch('http://127.0.0.1:5000/add_transaction', {
+                await fetch(`${API_URL}/add_transaction`, {
                     method: 'POST', headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
                         username: currentUser, category: category, walletId: 'w_main',
@@ -262,7 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const amount = parseInt(document.getElementById('goal-amount').value);
             if (!amount || amount <= 0) return alert("Nhập số tiền mục tiêu!");
 
-            await fetch('http://127.0.0.1:5000/add_goal', {
+            await fetch(`${API_URL}/add_goal`, {
                 method: 'POST', headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ username: currentUser, name: name, amount: amount })
             });

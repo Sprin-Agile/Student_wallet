@@ -92,7 +92,7 @@ async function handleAuth(action) {
     }
 
     try {
-        const response = await fetch(`http://127.0.0.1:5000/${action}`, {
+        const response = await fetch(`${API_URL}/${action}`, {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password })
         });
@@ -167,7 +167,7 @@ async function goToDashboard() {
     const currentUser = localStorage.getItem('sw_currentUser');
     if (currentUser) {
         try {
-            await fetch('http://127.0.0.1:5000/add_wallet', {
+            await fetch(`${API_URL}/add_wallet`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({

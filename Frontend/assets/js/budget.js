@@ -46,8 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!currentUser) return;
         try {
             const [resBudgets, resTrans] = await Promise.all([
-                fetch('http://127.0.0.1:5000/get_budgets', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({username: currentUser}) }),
-                fetch('http://127.0.0.1:5000/get_transactions', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({username: currentUser}) })
+                fetch(`${API_URL}/get_budgets`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({username: currentUser}) }),
+                fetch(`${API_URL}/get_transactions`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({username: currentUser}) })
             ]);
 
             const allBudgets = await resBudgets.json();
@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
             payload.category = document.getElementById('budget-category').value;
         }
 
-        await fetch('http://127.0.0.1:5000/add_budget', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
+        await fetch(`${API_URL}/add_budget`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
         document.getElementById('budget-form').reset();
         budgetModal.style.display = 'none';
         loadDataAndRender();
@@ -178,14 +178,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.deleteGeneralBudget = async () => {
         if (confirm('CẢNH BÁO: Xóa Ngân sách chung sẽ xóa toàn bộ các Ngân sách riêng. Tiếp tục?')) {
-            await fetch('http://127.0.0.1:5000/delete_budget', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ username: currentUser, all: true }) });
+            await fetch(`${API_URL}/delete_budget`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ username: currentUser, all: true }) });
             loadDataAndRender();
         }
     };
 
     window.deleteSpecificBudget = async (id) => {
         if (confirm('Bạn có chắc chắn muốn xóa mục ngân sách này?')) {
-            await fetch('http://127.0.0.1:5000/delete_budget', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ id: id, username: currentUser }) });
+            await fetch(`${API_URL}/delete_budget`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ id: id, username: currentUser }) });
             loadDataAndRender();
         }
     };

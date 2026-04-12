@@ -65,8 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!currentUser) return;
         try {
             const [resTrans, resWallets] = await Promise.all([
-                fetch('http://127.0.0.1:5000/get_transactions', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({username: currentUser}) }),
-                fetch('http://127.0.0.1:5000/get_wallets', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({username: currentUser}) })
+                fetch(`${API_URL}/get_transactions`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({username: currentUser}) }),
+                fetch(`${API_URL}/get_wallets`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({username: currentUser}) })
             ]);
             transactions = await resTrans.json();
             wallets = await resWallets.json();
@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.btn-delete').forEach(btn => {
             btn.onclick = async function() {
                 if(confirm('Bạn có chắc chắn muốn xóa giao dịch này?')) {
-                    await fetch('http://127.0.0.1:5000/delete_transaction', {
+                    await fetch(`${API_URL}/delete_transaction`, {
                         method: 'POST', headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({ id: parseInt(this.getAttribute('data-id')), username: currentUser })
                     });
@@ -181,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // CẬP NHẬT: Kiểm tra xem người dùng đã chọn ví chưa
             if (!selectedWallet) return alert("Bạn ơi, vui lòng chọn ví giao dịch nhé!");
 
-            await fetch('http://127.0.0.1:5000/add_transaction', {
+            await fetch(`${API_URL}/add_transaction`, {
                 method: 'POST', headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     username: currentUser,
