@@ -8,15 +8,21 @@ dotenv_path = os.path.join(os.path.dirname(__file__), '..', '.env')
 load_dotenv(dotenv_path)
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
 DB_CONFIG = {
     "host": "mysql-student-wallet-student-d520.b.aivencloud.com",
     "user": "avnadmin",
     "password": os.environ.get("DB_PASSWORD"), 
     "database": "defaultdb",
-    "port": 14854
+    "port": 14854,
+    "ssl_disabled": False
 }
+
+@app.route('/')
+def home():
+    return "Server Student Wallet đang chạy tốt!", 200
+
 def get_db_connection():
     try:
         conn = mysql.connector.connect(**DB_CONFIG)
