@@ -78,7 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateWalletSelect() {
         const walletSelect = document.getElementById('wallet-select');
         if (!walletSelect) return;
-        const mainName = localStorage.getItem('sw_BookName') || 'Ví chính';
+        const dbMainWallet = wallets.find(w => w.id === 'w_main');
+        const mainName = dbMainWallet ? dbMainWallet.name : (localStorage.getItem('sw_BookName') || 'Ví chính');
+
         let html = `<option value="" disabled selected>-- Chọn ví giao dịch --</option>`;
         html += `<option value="w_main">${mainName} (Mặc định)</option>`;
 
@@ -174,13 +176,9 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const amount = parseInt(document.getElementById('amount').value);
             if (!amount || amount <= 0) return alert("Vui lòng nhập số tiền!");
-
             const walletSelect = document.getElementById('wallet-select');
             const selectedWallet = walletSelect ? walletSelect.value : '';
-
-            // CẬP NHẬT: Kiểm tra xem người dùng đã chọn ví chưa
             if (!selectedWallet) return alert("Bạn ơi, vui lòng chọn ví giao dịch nhé!");
-
             await fetch(`${API_URL}/add_transaction`, {
                 method: 'POST', headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
@@ -197,7 +195,6 @@ document.addEventListener('DOMContentLoaded', () => {
             modal.classList.remove('active');
             form.reset();
             updateDropdown('expense');
-            // CẬP NHẬT: Reset lại select box về trạng thái chưa chọn sau khi submit thành công
             if(walletSelect) walletSelect.value = "";
         };
     }

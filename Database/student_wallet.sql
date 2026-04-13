@@ -7,15 +7,17 @@ CREATE TABLE IF NOT EXISTS users (
                                      username VARCHAR(255) NOT NULL UNIQUE,
                                      password VARCHAR(255) NOT NULL
 );
+DROP TABLE IF EXISTS wallets;
 
 -- 2. Bảng Quản lý Ví
 CREATE TABLE IF NOT EXISTS wallets (
-                                       id VARCHAR(50) PRIMARY KEY,
+                                       id VARCHAR(50),
                                        username VARCHAR(255),
                                        name VARCHAR(100),
                                        type VARCHAR(50),
                                        icon VARCHAR(50),
                                        initial_balance BIGINT DEFAULT 0,
+                                       PRIMARY KEY (id, username),
                                        FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE
 );
 
@@ -23,7 +25,7 @@ CREATE TABLE IF NOT EXISTS wallets (
 DROP TABLE IF EXISTS transactions;
 
 CREATE TABLE IF NOT EXISTS transactions (
-                                            id INT AUTO_INCREMENT PRIMARY KEY,
+                                            id VARCHAR(50),
                                             username VARCHAR(255),
                                             amount BIGINT,
                                             category VARCHAR(100),

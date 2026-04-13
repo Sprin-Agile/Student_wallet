@@ -128,7 +128,12 @@ def add_wallet():
     data = request.json
     db = get_db_connection()
     cursor = db.cursor()
-    sql = "INSERT INTO wallets (id, username, name, type, icon, initial_balance) VALUES (%s, %s, %s, %s, %s, %s)"
+    sql = """
+          INSERT INTO wallets (id, username, name, type, icon, initial_balance)
+          VALUES (%s, %s, %s, %s, %s, %s)
+          ON DUPLICATE KEY UPDATE
+                               name = VALUES(name), icon = VALUES(icon), initial_balance = VALUES(initial_balance) \
+          """
     cursor.execute(sql, (data['id'], data['username'], data['name'], data['type'], data['icon'], data['initialBalance']))
     db.commit()
     cursor.close()
