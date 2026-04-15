@@ -130,7 +130,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const now = new Date();
         const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
         const currentWeekStart = new Date(now);
-        currentWeekStart.setDate(now.getDate() - now.getDay() + 1);
+        const dayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1;
+        currentWeekStart.setDate(now.getDate() - dayOfWeek);
         currentWeekStart.setHours(0,0,0,0);
 
         const expenseData = {};
@@ -141,8 +142,8 @@ document.addEventListener('DOMContentLoaded', () => {
             let include = false;
 
             if (filter === 'all') include = true;
-            else if (filter === 'month' && tDate >= currentMonthStart) include = true;
-            else if (filter === 'week' && tDate >= currentWeekStart) include = true;
+            else if (filter === 'month' && tDate >= currentMonthStart && tDate <= now) include = true;
+            else if (filter === 'week' && tDate >= currentWeekStart && tDate <= now) include = true;
             else if (filter === 'custom') {
                 const startRaw = document.getElementById('pie-start-date')?.value;
                 const endRaw = document.getElementById('pie-end-date')?.value;

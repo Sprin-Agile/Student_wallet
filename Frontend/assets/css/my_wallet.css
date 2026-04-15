@@ -76,3 +76,20 @@
 #wallet-modal-popup .type-select-grid {
     padding: 10px 0;
 }
+
+.type-box i {
+    color: var(--user-theme) !important;
+    transition: 0.3s;
+}
+
+.type-box:hover {
+    border-color: var(--user-theme) !important;
+    background: var(--user-theme-light) !important;
+    transform: translateY(-2px);
+}
+
+.type-box.selected {
+    border-color: var(--user-theme) !important;
+    background: var(--user-theme-light) !important;
+    box-shadow: 0 0 0 2px var(--user-theme);
+}

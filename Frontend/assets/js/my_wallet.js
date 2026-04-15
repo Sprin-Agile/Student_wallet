@@ -137,11 +137,45 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div style="font-size: 15px; font-weight: 700; color: ${savedColor};">${wallet.name}</div>
                         </div>
                     </div>
-                    <div style="text-align: right;">
+                    <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 5px;">
                         <div style="font-size: 16px; font-weight: 800; color: ${savedColor};">${formatMoney(currentBalance)}</div>
+                        
+                        ${wallet.id !== 'w_main' ? `
+                            <button id="btn-delete-wallet" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: none; padding: 4px 8px; border-radius: 6px; font-size: 11px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 3px; transition: 0.2s;" onmouseover="this.style.background='#ef4444'; this.style.color='#fff';" onmouseout="this.style.background='rgba(239, 68, 68, 0.1)'; this.style.color='#ef4444';">
+                                <i class='bx bx-trash'></i> Xóa ví
+                            </button>
+                        ` : ''}
+                        
                     </div>
                 </div>
             `;
+        }
+
+        // --- CODE XỬ LÝ SỰ KIỆN XÓA VÍ ---
+        const btnDeleteWallet = document.getElementById('btn-delete-wallet');
+        if (btnDeleteWallet) {
+            btnDeleteWallet.onclick = async () => {
+                if(confirm('🚨 BẠN CÓ CHẮC CHẮN MUỐN XÓA VÍ NÀY?\n\nLưu ý: Toàn bộ lịch sử giao dịch (thu/chi) thuộc ví này sẽ bị xóa vĩnh viễn và không thể khôi phục!')) {
+                    try {
+                        const res = await fetch(`${API_URL}/delete_wallet`, {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({ id: wallet.id, username: currentUser })
+                        });
+
+                        if(res.ok) {
+                            // Đóng modal và tải lại dữ liệu
+                            document.getElementById('walletDetailModal').classList.remove('active');
+                            calculateAndRender();
+                        } else {
+                            const data = await res.json();
+                            alert(data.error || "Có lỗi xảy ra!");
+                        }
+                    } catch (e) {
+                        console.error('Lỗi khi xóa ví:', e);
+                    }
+                }
+            };
         }
 
         detailModal.classList.add('active');

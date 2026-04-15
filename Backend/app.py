@@ -140,6 +140,20 @@ def add_wallet():
     db.close()
     return jsonify({"status": "success"})
 
+@app.route('/delete_wallet', methods=['POST'])
+def delete_wallet():
+    data = request.json
+    if data['id'] == 'w_main':
+        return jsonify({"error": "Không thể xóa ví mặc định!"}), 400
+
+    db = get_db_connection()
+    cursor = db.cursor()
+    cursor.execute("DELETE FROM wallets WHERE id = %s AND username = %s", (data['id'], data['username']))
+    db.commit()
+    cursor.close()
+    db.close()
+    return jsonify({"status": "deleted"}), 200
+
 # --- NGÂN SÁCH (BUDGETS) ---
 @app.route('/get_budgets', methods=['POST'])
 def get_budgets():
