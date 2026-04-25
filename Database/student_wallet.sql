@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS wallets (
 DROP TABLE IF EXISTS transactions;
 
 CREATE TABLE IF NOT EXISTS transactions (
-                                            id VARCHAR(50),
+                                            id INT AUTO_INCREMENT PRIMARY KEY,
                                             username VARCHAR(255),
                                             amount BIGINT,
                                             category VARCHAR(100),

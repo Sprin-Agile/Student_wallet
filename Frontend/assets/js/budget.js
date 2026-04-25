@@ -86,7 +86,17 @@ document.addEventListener('DOMContentLoaded', () => {
             headerBtn.onclick = () => openBudgetModal(false);
         }
 
-        const genSpent = transactions.filter(t => t.type === 'expense' && t.id >= generalBudget.created_at).reduce((sum, t) => sum + t.amount, 0);
+        const parseVNdate = (dateStr) => {
+            if (!dateStr) return new Date(0);
+            const parts = dateStr.split('/');
+            return parts.length === 3 ? new Date(parts[2], parts[1] - 1, parts[0]) : new Date(dateStr);
+        };
+
+        const genBudgetTime = new Date(generalBudget.created_at).setHours(0, 0, 0, 0);
+
+        const genSpent = transactions
+            .filter(t => t.type === 'expense' && parseVNdate(t.date).getTime() >= genBudgetTime)
+            .reduce((sum, t) => sum + t.amount, 0);
         const genPercent = ((genSpent / generalBudget.amount) * 100).toFixed(0);
         const genIsOver = genSpent > generalBudget.amount;
 
@@ -117,11 +127,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (specificBudgets.length > 0) {
             container.innerHTML += `<h3 style="margin-bottom: 15px; font-size: 1.1rem;">Ngân sách chi tiết</h3>`;
             specificBudgets.forEach((budget) => {
-                const spent = transactions.filter(t => t.category === budget.category && t.type === 'expense' && t.id >= budget.created_at).reduce((sum, t) => sum + t.amount, 0);
+                const specificBudgetTime = new Date(budget.created_at).setHours(0, 0, 0, 0);
+                const spent = transactions
+                    .filter(t => t.category === budget.category && t.type === 'expense' && parseVNdate(t.date).getTime() >= specificBudgetTime)
+                    .reduce((sum, t) => sum + t.amount, 0);
                 const percent = ((spent / budget.amount) * 100).toFixed(0);
                 const isOver = spent > budget.amount;
-
-                // --- ĐÃ SỬA: Đồng bộ nút Xóa cho cả các Ngân sách chi tiết ---
+                
                 container.innerHTML += `
                     <div class="budget-card" style="background: var(--card-bg, #fff); padding: 20px; border-radius: 20px; margin-bottom: 15px; border: 1px solid var(--border); box-shadow: var(--shadow-sm);">
                         <div style="display:flex; justify-content:space-between; margin-bottom:12px;">

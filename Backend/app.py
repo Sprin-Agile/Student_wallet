@@ -95,10 +95,11 @@ def add_transaction():
     cursor = db.cursor()
     sql = "INSERT INTO transactions (username, amount, category, note, type, wallet_id) VALUES (%s, %s, %s, %s, %s, %s)"
     cursor.execute(sql, (data['username'], data['amount'], data['category'], data['note'], data['type'], data.get('walletId', 'w_main')))
+    new_id = cursor.lastrowid
     db.commit()
     cursor.close()
     db.close()
-    return jsonify({"id": cursor.lastrowid}), 201
+    return jsonify({"id": new_id}), 201
 
 @app.route('/delete_transaction', methods=['POST'])
 def delete_transaction():
