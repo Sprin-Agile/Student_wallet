@@ -92,7 +92,20 @@
                 <div class="charts-column statistics-charts-column">
                     <div class="panel chart-panel pie-chart-panel">
                         <div class="panel-header statistics-panel-header">
-                            <h3>Thống Kê Chi Tiêu Cá Nhân</h3>
+                            <div class="stats-header-top">
+                                <h3 id="stats-title">Thống Kê Chi Tiêu Cá Nhân</h3>
+                                <div class="statistics-mode-group">
+                                    <button class="mode-btn active" data-mode="expense">
+                                        <i class='bx bx-trending-down'></i> Chi tiêu
+                                    </button>
+                                    <button class="mode-btn" data-mode="income">
+                                        <i class='bx bx-trending-up'></i> Thu nhập
+                                    </button>
+                                    <button class="mode-btn" data-mode="summary">
+                                        <i class='bx bx-pie-chart-alt-2'></i> Tổng hợp
+                                    </button>
+                                </div>
+                            </div>
                             <div class="statistics-filter-group">
                                 <select id="pie-time-filter" class="statistics-select">
                                     <option value="week">Tuần này</option>
@@ -109,19 +122,26 @@
                         </div>
 
                         <div class="stat-cards statistics-stat-cards">
-                            <div class="card income-card statistics-card-plain">
+                            <div class="card income-card statistics-card-plain" id="stat-income-card">
                                 <div class="card-info">
                                     <p>Tổng Thu</p>
                                     <h3 id="stat-income-val" class="text-green">+ 0 đ</h3>
                                 </div>
                                 <div class="card-icon"><i class='bx bx-trending-up'></i></div>
                             </div>
-                            <div class="card expense-card statistics-card-plain">
+                            <div class="card expense-card statistics-card-plain" id="stat-expense-card">
                                 <div class="card-info">
                                     <p>Tổng Chi</p>
                                     <h3 id="stat-expense-val" class="text-red">- 0 đ</h3>
                                 </div>
                                 <div class="card-icon"><i class='bx bx-trending-down'></i></div>
+                            </div>
+                            <div class="card balance-card statistics-card-plain" id="stat-balance-card" style="display: none;">
+                                <div class="card-info">
+                                    <p>Số dư</p>
+                                    <h3 id="stat-balance-val" class="text-blue">+ 0 đ</h3>
+                                </div>
+                                <div class="card-icon"><i class='bx bx-wallet'></i></div>
                             </div>
                         </div>
 
